@@ -1334,18 +1334,10 @@ void _toggleFullScreen() {
               }
       
       setState(() => _isInPipMode = true);
-    } on PlatformException catch (e) {
-      print("Failed to start PiP: ${e.message}");
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to start PiP: ${e.message}')),
-        );
-      }
-    }
+    } 
 
-        setState(() => _isInPipMode = true);
-      }
-    } catch (e) {
+       
+      } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('PiP error: ${e.toString()}')),
       );
