@@ -5,13 +5,17 @@ import AVFoundation
 public class PipHandler: NSObject, AVPictureInPictureControllerDelegate {
     private var pipController: AVPictureInPictureController?
     private var player: AVPlayer?
-    private var channel: FlutterMethodChannel?
+    private var eventSink: FlutterEventSink?
     
     public static func register(with registrar: FlutterPluginRegistrar) {
-        let channel = FlutterMethodChannel(name: "pip_channel", binaryMessenger: registrar.messenger())
+        let methodChannel = FlutterMethodChannel(name: "pip_channel", 
+                                               binaryMessenger: registrar.messenger())
+        let eventChannel = FlutterEventChannel(name: "pip_events",
+                                             binaryMessenger: registrar.messenger())
         let instance = PipHandler()
-        instance.channel = channel
-        registrar.addMethodCallDelegate(instance, channel: channel)
+        
+        registrar.addMethodCallDelegate(instance, channel: methodChannel)
+        eventChannel.setStreamHandler(instance)
     }
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -20,7 +24,9 @@ public class PipHandler: NSObject, AVPictureInPictureControllerDelegate {
             guard let args = call.arguments as? [String: Any],
                   let path = args["path"] as? String,
                   let position = args["position"] as? Double else {
-                result(FlutterError(code: "INVALID_ARG", message: "Invalid arguments", details: nil))
+                result(FlutterError(code: "INVALID_ARG", 
+                                   message: "Missing path or position", 
+                                   details: nil))
                 return
             }
             startPip(path: path, position: position, result: result)
@@ -37,28 +43,30 @@ public class PipHandler: NSObject, AVPictureInPictureControllerDelegate {
     }
     
     private func startPip(path: String, position: Double, result: @escaping FlutterResult) {
-        // Clean up previous resources
         stopPip(result: nil)
         
-        // Create new player
-        let player = AVPlayer(url: URL(fileURLWithPath: path))
-        player.seek(to: CMTime(seconds: position / 1000, preferredTimescale: 1000))
+        guard let url = URL(string: path) else {
+            result(FlutterError(code: "INVALID_PATH", 
+                              message: "Invalid video path", 
+                              details: nil))
+            return
+        }
         
-        // Setup player layer
-        let playerLayer = AVPlayerLayer(player: player)
-        playerLayer.frame = UIScreen.main.bounds
+        player = AVPlayer(url: url)
+        player?.seek(to: CMTime(seconds: position / 1000, 
+                              preferredTimescale: CMTimeScale(NSEC_PER_SEC)))
         
-        // Configure PiP controller
-        guard let pipController = AVPictureInPictureController(playerLayer: playerLayer) else {
-            result(FlutterError(code: "PIP_UNAVAIL", message: "PiP not available", details: nil))
+        guard let playerLayer = AVPlayerLayer(player: player),
+              let pipController = AVPictureInPictureController(playerLayer: playerLayer) 
+        else {
+            result(FlutterError(code: "PIP_UNAVAILABLE", 
+                              message: "PiP not supported", 
+                              details: nil))
             return
         }
         
         self.pipController = pipController
-        self.player = player
         pipController.delegate = self
-        
-        // Start PiP
         pipController.startPictureInPicture()
         result(true)
     }
@@ -73,10 +81,23 @@ public class PipHandler: NSObject, AVPictureInPictureControllerDelegate {
     
     // MARK: - AVPictureInPictureControllerDelegate
     public func pictureInPictureControllerDidStartPictureInPicture(_ controller: AVPictureInPictureController) {
-        channel?.invokeMethod("onPiPStarted", arguments: nil)
+        eventSink?("started")
     }
     
     public func pictureInPictureControllerDidStopPictureInPicture(_ controller: AVPictureInPictureController) {
-        channel?.invokeMethod("onPiPStopped", arguments: nil)
+        eventSink?("stopped")
+    }
+}
+
+extension PipHandler: FlutterStreamHandler {
+    public func onListen(withArguments arguments: Any?, 
+                       eventSink: @escaping FlutterEventSink) -> FlutterError? {
+        self.eventSink = eventSink
+        return nil
+    }
+    
+    public func onCancel(withArguments arguments: Any?) -> FlutterError? {
+        eventSink = nil
+        return nil
     }
 }

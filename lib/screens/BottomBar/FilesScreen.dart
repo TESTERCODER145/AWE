@@ -687,6 +687,11 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
   bool _showPip = false;
 Offset _pipPosition = Offset(20, 20);
 double _pipSize = 200;
+// Add this global variable at the top of your file
+bool _globalPipActive = false;
+Offset _globalPipPosition = Offset(20, 20);
+double _globalPipSize = 300; // Increased from 200 to 300
+
 void _togglePip() async {
   if (Platform.isIOS) {
     final position = _controller.value.position.inMilliseconds.toDouble();
@@ -697,7 +702,10 @@ void _togglePip() async {
       });
       
       if (result == true) {
-        setState(() => _isInPipMode = true);
+        setState((){
+            _globalPipActive = true;
+          _isInPipMode = true;
+        });
         _controller.pause();
       }
     } on PlatformException catch (e) {
@@ -710,25 +718,45 @@ void _togglePip() async {
     } else {
       await _enterPipMode();
     }
+    setState(() => _globalPipActive = !_globalPipActive);
   }
 }
-void _initAudioSession() async {
+// Add these handler methods
+void _toggleFullScreenFromPip() {
+  setState(() {
+    _globalPipActive = false;
+    _isFullScreen = true;
+  });
+  _toggleFullScreen();
+}
+
+
+Future<void> _initAudioSession() async {
   final session = await AudioSession.instance;
-  await session.configure(AudioSessionConfiguration(
-    avAudioSessionCategory: AVAudioSessionCategory.playback,
-    avAudioSessionCategoryOptions: AVAudioSessionCategoryOptions.allowBluetooth |
-        AVAudioSessionCategoryOptions.allowBluetoothA2DP,
-    avAudioSessionMode: AVAudioSessionMode.defaultMode,
-    avAudioSessionRouteSharingPolicy: AVAudioSessionRouteSharingPolicy.defaultPolicy,
-    avAudioSessionSetActiveOptions: AVAudioSessionSetActiveOptions.none,
-    androidAudioAttributes: const AndroidAudioAttributes(
-      contentType: AndroidAudioContentType.music,
-      flags: AndroidAudioFlags.none,
-      usage: AndroidAudioUsage.media,
-    ),
-    androidAudioFocusGainType: AndroidAudioFocusGainType.gain,
-    androidWillPauseWhenDucked: true,
-  ));
+  
+  if (Platform.isAndroid) {
+    await session.configure(const AudioSessionConfiguration(
+      avAudioSessionCategory: AVAudioSessionCategory.playback,
+      avAudioSessionCategoryOptions: 
+          AVAudioSessionCategoryOptions.allowBluetooth,
+      avAudioSessionMode: AVAudioSessionMode.defaultMode,
+      androidAudioAttributes: AndroidAudioAttributes(
+        contentType: AndroidAudioContentType.music,
+        flags: AndroidAudioFlags.none,
+        usage: AndroidAudioUsage.media,
+      ),
+      androidAudioFocusGainType: AndroidAudioFocusGainType.gain,
+      androidWillPauseWhenDucked: true,
+    ));
+  } else if (Platform.isIOS) {
+    await session.configure(const AudioSessionConfiguration(
+      avAudioSessionCategory: AVAudioSessionCategory.playback,
+      avAudioSessionCategoryOptions: 
+          AVAudioSessionCategoryOptions.allowBluetooth ,
+      
+      avAudioSessionMode: AVAudioSessionMode.defaultMode,
+    ));
+  }
 }
 
 Widget _buildPipOverlay() {
@@ -739,37 +767,192 @@ Widget _buildPipOverlay() {
       onPanUpdate: (details) {
         setState(() => _pipPosition += details.delta);
       },
-      onTap: () {
-        setState(() {
-          _showPip = false;
-          if (_isPlaying) _controller.play();
-        });
-      },
       child: Container(
         width: _pipSize,
         height: _pipSize * 9 / 16,
         decoration: BoxDecoration(
           color: Colors.black,
           borderRadius: BorderRadius.circular(8),
-        ),
-        child: Stack(
-          children: [
-            VideoPlayer(_controller),
-            Positioned.fill(
-              child: IconButton(
-                icon: Icon(
-                  _isPlaying ? Icons.pause : Icons.play_arrow,
-                  color: Colors.white,
-                ),
-                onPressed: _togglePlayPause,
-              ),
-            ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black26,
+              blurRadius: 8,
+              spreadRadius: 2,
+            )
           ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: Stack(
+            children: [
+              // Video Content
+              VideoPlayer(_controller),
+              
+              // Control Bar
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  height: 40,
+                  color: Colors.black54,
+                  padding: EdgeInsets.symmetric(horizontal: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Full Screen Button
+                      IconButton(
+                        icon: Icon(Icons.fullscreen, color: Colors.white),
+                        onPressed: () {
+                          setState(() {
+                            _showPip = false;
+                            if (!_isFullScreen) _toggleFullScreen();
+                            if (!_isPlaying) _togglePlayPause();
+                          });
+                        },
+                      ),
+                      
+                      // Play/Pause Button
+                      IconButton(
+                        icon: Icon(
+                          _isPlaying ? Icons.pause : Icons.play_arrow,
+                          color: Colors.white,
+                        ),
+                        onPressed: _togglePlayPause,
+                      ),
+                      
+                      // Close Button
+                      IconButton(
+                        icon: Icon(Icons.close, color: Colors.white),
+                        onPressed: () {
+                          setState(() {
+                            _showPip = false;
+                            _controller.pause();
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     ),
   );
 }
+Widget _buildGlobalPipOverlay() {
+  if (!_globalPipActive) return const SizedBox.shrink();
+
+  return Positioned(
+    left: _globalPipPosition.dx,
+    top: _globalPipPosition.dy,
+    child: GestureDetector(
+      onPanUpdate: (details) {
+        setState(() => _globalPipPosition += details.delta);
+      },
+      child: Container(
+        width: _globalPipSize,
+        height: _globalPipSize * 9 / 16,
+        decoration: BoxDecoration(
+          color: Colors.black,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black38,
+              blurRadius: 12,
+              spreadRadius: 4,
+            )
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Stack(
+            children: [
+              VideoPlayer(_controller),
+              _buildPipControls(),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+}
+// Separate control building
+Widget _buildPipControls() {
+  return Positioned.fill(
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        // Top controls
+        Container(
+          color: Colors.black54,
+          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              IconButton(
+                icon: Icon(Icons.close, color: Colors.white, size: 28),
+                onPressed: _closePip,
+              ),
+            ],
+          ),
+        ),
+        
+        // Center play controls
+        Expanded(
+          child: Center(
+            child: IconButton(
+              icon: Icon(
+                _isPlaying ? Icons.pause : Icons.play_arrow,
+                color: Colors.white,
+                size: 42,
+              ),
+              onPressed: _togglePlayPause,
+            ),
+          ),
+        ),
+        
+        // Bottom controls
+        Container(
+          color: Colors.black54,
+          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                icon: Icon(Icons.replay_10, color: Colors.white, size: 28),
+                onPressed: _skipBackward,
+              ),
+              IconButton(
+                icon: Icon(Icons.fullscreen, color: Colors.white, size: 28),
+                onPressed: _toggleFullScreenFromPip,
+              ),
+              IconButton(
+                icon: Icon(Icons.forward_10, color: Colors.white, size: 28),
+                onPressed: _skipForward,
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+
+void _closePip() {
+  setState(() {
+    _globalPipActive = false;
+    if (_isPlaying) _togglePlayPause();
+  });
+  if (Platform.isIOS) {
+    _pipChannel.invokeMethod('stopPip');
+  }
+}
+
+
 
   @override
   void initState() {
@@ -1410,7 +1593,7 @@ Widget build(BuildContext context) {
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          if (!_isInPipMode && !_showPip)
+          if (!_globalPipActive)
             GestureDetector(
               onTap: _toggleControls,
               onVerticalDragStart: _handleVerticalDragStart,
@@ -1435,8 +1618,9 @@ Widget build(BuildContext context) {
                     ),
             ),
           // PiP Overlay (shown when active)
+          if(_globalPipActive) _buildGlobalPipOverlay(),
           if (_showPip) _buildPipOverlay(),
-          if (_showControls && !_isInPipMode) _buildControls(),
+          if (_showControls && !_globalPipActive) _buildControls(),
           if (_showVolumeOverlay) _buildVolumeOverlay(),
           if (_showBrightnessOverlay) _buildBrightnessOverlay(),
         ],

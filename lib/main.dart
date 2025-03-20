@@ -16,6 +16,7 @@ import 'package:downloadsplatform/screens/SplashScreen.dart';
 import 'package:downloadsplatform/screens/VerifyPasswordCodeScreen.dart';
 import 'package:downloadsplatform/screens/CompleteProfileScreen.dart';
 import 'package:downloadsplatform/screens/WelcomeScreen.dart';
+import 'package:downloadsplatform/screens/BottomBar/PipHandler.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -50,7 +51,7 @@ void main() async {
   await authProvider.loadUserData();
   final tracker = AppLifecycleTracker();
   WidgetsBinding.instance.addObserver(tracker);
-
+ PipHandler.initialize();
   runApp(
     MultiProvider(
       providers: [
