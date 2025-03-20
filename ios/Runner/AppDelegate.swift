@@ -154,21 +154,18 @@ import fl_pip
         pipChannel?.setMethodCallHandler { [weak self] (call, result) in
             switch call.method {
             case "startPip":
-                if let args = call.arguments as? [String: Any],
-                   let path = args["path"] as? String,
-                   let position = args["position"] as? Double {
-                    self?.handleStartPip(
-                        filePath: path,
-                        position: position,
-                        result: result
-                    )
-                } else {
-                    result(FlutterError(code: "INVALID_ARGS", message: "Invalid arguments", details: nil))
-                }
+               guard let args = call.arguments as? [String: Any],
+                  let path = args["path"] as? String,
+                  let position = args["position"] as? Double else {
+                result(FlutterError(code: "INVALID_ARGS", message: "Invalid arguments", details: nil))
+                return
+            }
+            self?.handleStartPip(filePath: path, position: position, result: result)
             case "stopPip":
                 self?.handleStopPip(result: result)
             case "isPipSupported":
-                result(AVPictureInPictureController.isPictureInPictureSupported())
+                 let isSupported = AVPictureInPictureController.isPictureInPictureSupported()
+                 result(isSupported)
             default:
                 result(FlutterMethodNotImplemented)
             }

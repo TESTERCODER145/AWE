@@ -685,12 +685,26 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
 Offset _pipPosition = Offset(20, 20);
 double _pipSize = 200;
 void _togglePip() async {
-    
+   
+    if (Platform.isIOS) {
+      if (_isInPipMode) {
+        await _pipChannel.invokeMethod('stopPip');
+      } else {
+        final position = _controller.value.position;
+        await _pipChannel.invokeMethod('startPip', {
+          'path': widget.filePath,
+          'position': position.inMilliseconds.toDouble(),
+        });
+      }
+    }else{
+      
       if (_isInPipMode) {
       await _exitPipMode();
     } else {
       await _enterPipMode();
     }
+    }
+  
     
   }
 Widget _buildPipOverlay() {
@@ -1301,47 +1315,47 @@ void _toggleFullScreen() {
       //   return;
       // }
       
-      // final position = _controller.value.position.inMilliseconds;
-      // await _pipChannel.invokeMethod('startPip', {
-      //   'path': widget.filePath,
-      //   'position': position.toDouble(),
-      // });
-       final isAvailable = await flpip.FlPiP().isAvailable;
-        bool? isSupported = await _pipChannel.invokeMethod<bool>('isPipSupported');
-          if (isSupported != true) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('PiP not supported on this device')),
-          );
-        }
-        return;
-      }
+      final position = _controller.value.position.inMilliseconds;
+      await _pipChannel.invokeMethod('startPip', {
+        'path': widget.filePath,
+        'position': position.toDouble(),
+      });
+      //  final isAvailable = await flpip.FlPiP().isAvailable;
+      //   bool? isSupported = await _pipChannel.invokeMethod<bool>('isPipSupported');
+      //     if (isSupported != true) {
+      //   if (mounted) {
+      //     ScaffoldMessenger.of(context).showSnackBar(
+      //       const SnackBar(content: Text('PiP not supported on this device')),
+      //     );
+      //   }
+      //   return;
+      // }
 
-              if (isAvailable) {
-                // Enable PiP with iOS configuration
-                await flpip.FlPiP().enable(
-                  ios: flpip.FlPiPiOSConfig(
-                    // Point to your actual video file in assets
-                    videoPath: widget.filePath,
-                    // Use null for your own project assets
-                    packageName: null,
-                    createNewEngine: true,
-                    // Enable playback controls
-                    enableControls: true,
-                    // Enable playback speed controls
-                    enablePlayback: true,
-                    // Continue PiP when app is in background
-                    enabledWhenBackground: true,
-                  ),
-                );
+      //         if (isAvailable) {
+      //           // Enable PiP with iOS configuration
+      //           await flpip.FlPiP().enable(
+      //             ios: flpip.FlPiPiOSConfig(
+      //               // Point to your actual video file in assets
+      //               videoPath: widget.filePath,
+      //               // Use null for your own project assets
+      //               packageName: null,
+      //               createNewEngine: true,
+      //               // Enable playback controls
+      //               enableControls: true,
+      //               // Enable playback speed controls
+      //               enablePlayback: true,
+      //               // Continue PiP when app is in background
+      //               enabledWhenBackground: true,
+      //             ),
+      //           );
                 
-                // Put app in background mode to show PiP
-                await flpip.FlPiP().toggle(flpip.AppState.background);
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('PiP is not available on this device')),
-                );
-              }
+      //           // Put app in background mode to show PiP
+      //           await flpip.FlPiP().toggle(flpip.AppState.background);
+      //         } else {
+      //           ScaffoldMessenger.of(context).showSnackBar(
+      //             const SnackBar(content: Text('PiP is not available on this device')),
+      //           );
+      //         }
       
       setState(() => _isInPipMode = true);
     } 
