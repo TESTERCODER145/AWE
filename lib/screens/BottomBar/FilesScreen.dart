@@ -3,7 +3,7 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:ui' as ui;
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:floating/floating.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_overlay_window/flutter_overlay_window.dart';
@@ -20,7 +20,10 @@ import 'package:volume_controller/volume_controller.dart';
 import 'package:screen_brightness/screen_brightness.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:crypto/crypto.dart';
-import 'package:fl_pip/fl_pip.dart';
+// For Android
+import 'package:floating/floating.dart' as floating;
+// For iOS  
+import 'package:fl_pip/fl_pip.dart' as flpip;
 
 import 'dart:convert';
 
@@ -689,11 +692,11 @@ void _togglePip() async {
       await _enterPipMode();
     }
     }else{
-       final isAvailable = await FlPiP().isAvailable;
+       final isAvailable = await flpip.FlPiP().isAvailable;
               if (isAvailable) {
                 // Enable PiP with iOS configuration
-                await FlPiP().enable(
-                  ios: FlPiPiOSConfig(
+                await flpip.FlPiP().enable(
+                  ios: flpip.FlPiPiOSConfig(
                     // Point to your actual video file in assets
                     videoPath: widget.filePath,
                     // Use null for your own project assets
@@ -709,7 +712,7 @@ void _togglePip() async {
                 );
                 
                 // Put app in background mode to show PiP
-                await FlPiP().toggle(AppState.background);
+                await flpip.FlPiP().toggle(AppState.background);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('PiP is not available on this device')),
@@ -1283,7 +1286,7 @@ void _toggleFullScreen() {
 
     try {
       if (Platform.isAndroid) {
-        final floating = Floating();
+        final floating = floating.Floating();
         final isAvailable = await floating.isPipAvailable;
 
         if (!isAvailable) {
@@ -1294,11 +1297,11 @@ void _toggleFullScreen() {
         }
 
         final status = await floating.enable(ImmediatePiP(
-          aspectRatio: Rational(
+          aspectRatio: floating.Rational(
             _controller.value.size.width.toInt(),
             _controller.value.size.height.toInt(),
           ),
-          sourceRectHint: Rectangle<int>(
+          sourceRectHint: floating.Rectangle<int>(
             0,
             0,
             _controller.value.size.width.toInt(),
@@ -1306,7 +1309,7 @@ void _toggleFullScreen() {
           ),
         ));
 
-        if (status == PiPStatus.enabled) {
+        if (status == floating.PiPStatus.enabled) {
           setState(() => _isInPipMode = true);
         }
       } else if (Platform.isIOS) {
