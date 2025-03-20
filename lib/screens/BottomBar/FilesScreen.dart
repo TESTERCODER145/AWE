@@ -1307,7 +1307,7 @@ void _toggleFullScreen() {
       //   'position': position.toDouble(),
       // });
        final isAvailable = await flpip.FlPiP().isAvailable;
-        bool isSupported = await _pipChannel.invokeMethod<bool>('isPipSupported');
+        bool? isSupported = await _pipChannel.invokeMethod<bool>('isPipSupported');
         if (!isSupported) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
