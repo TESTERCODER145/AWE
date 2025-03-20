@@ -1307,7 +1307,8 @@ void _toggleFullScreen() {
       //   'position': position.toDouble(),
       // });
        final isAvailable = await flpip.FlPiP().isAvailable;
-              if (isAvailable) {
+        final isSupported = await _pipChannel.invokeMethod<bool>('isPipSupported');
+              if (isSupported) {
                 // Enable PiP with iOS configuration
                 await flpip.FlPiP().enable(
                   ios: flpip.FlPiPiOSConfig(

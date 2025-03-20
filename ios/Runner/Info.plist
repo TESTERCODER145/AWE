@@ -78,6 +78,7 @@
     <string>audio</string>
     <string>fetch</string>
     <string>processing</string>
+    <string>picture-in-picture</string>
 </array>
 <key>NSBonjourServices</key>
 <array>
