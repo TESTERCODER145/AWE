@@ -1307,11 +1307,11 @@ void _toggleFullScreen() {
       //   'position': position.toDouble(),
       // });
        final isAvailable = await flpip.FlPiP().isAvailable;
-        bool? isSupported = await _pipChannel.invokeMethod<bool?>('isPipSupported');
-        if (!isSupported ?? false) {
+        bool? isSupported = await _pipChannel.invokeMethod<bool>('isPipSupported');
+          if (isSupported != true) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('PiP not supported on this device')),
+            const SnackBar(content: Text('PiP not supported on this device')),
           );
         }
         return;
