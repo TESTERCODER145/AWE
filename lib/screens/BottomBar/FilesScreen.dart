@@ -20,6 +20,7 @@ import 'package:volume_controller/volume_controller.dart';
 import 'package:screen_brightness/screen_brightness.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:crypto/crypto.dart';
+import 'package:fl_pip/fl_pip.dart';
 
 import 'dart:convert';
 
@@ -681,10 +682,39 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
 Offset _pipPosition = Offset(20, 20);
 double _pipSize = 200;
 void _togglePip() async {
-    if (_isInPipMode) {
+    if(Platform.isAndroid){
+      if (_isInPipMode) {
       await _exitPipMode();
     } else {
       await _enterPipMode();
+    }
+    }else{
+       final isAvailable = await FlPiP().isAvailable;
+              if (isAvailable) {
+                // Enable PiP with iOS configuration
+                await FlPiP().enable(
+                  ios: FlPiPiOSConfig(
+                    // Point to your actual video file in assets
+                    videoPath: widget.filePath,
+                    // Use null for your own project assets
+                    packageName: null,
+                    createNewEngine: true,
+                    // Enable playback controls
+                    enableControls: true,
+                    // Enable playback speed controls
+                    enablePlayback: true,
+                    // Continue PiP when app is in background
+                    enabledWhenBackground: true,
+                  ),
+                );
+                
+                // Put app in background mode to show PiP
+                await FlPiP().toggle(AppState.background);
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('PiP is not available on this device')),
+                );
+              }
     }
   }
 Widget _buildPipOverlay() {
@@ -774,9 +804,8 @@ Widget _buildPipOverlay() {
     WidgetsBinding.instance.addObserver(this);
     if (Platform.isIOS) {
     _initializePlayer();
-  } else {
-    _initializeVideoPlayer();
-  }
+  } 
+   _initializeVideoPlayer();
     _initVolumeListener();
     
     // Make sure overlays are hidden at start

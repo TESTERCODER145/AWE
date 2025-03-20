@@ -2,6 +2,7 @@ import UIKit
 import Flutter
 import AVKit
 import AVFoundation
+import fl_pip
 
 @main
 @objc class AppDelegate: FlutterAppDelegate {
@@ -24,6 +25,9 @@ import AVFoundation
         
         GeneratedPluginRegistrant.register(with: self)
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+    }
+     override func registerPlugin(_ registry: FlutterPluginRegistry) {
+        GeneratedPluginRegistrant.register(with: registry)
     }
     
     // MARK: - Application Lifecycle
