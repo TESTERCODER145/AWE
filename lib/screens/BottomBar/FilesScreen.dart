@@ -21,7 +21,7 @@ import 'package:screen_brightness/screen_brightness.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:crypto/crypto.dart';
 // For Android
-import 'package:floating/floating.dart' as floating;
+import 'package:floating/floating.dart' as Float;
 // For iOS  
 import 'package:fl_pip/fl_pip.dart' as flpip;
 
@@ -712,7 +712,7 @@ void _togglePip() async {
                 );
                 
                 // Put app in background mode to show PiP
-                await flpip.FlPiP().toggle(AppState.background);
+                await flpip.FlPiP().toggle(flpip.AppState.background);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('PiP is not available on this device')),
@@ -1286,7 +1286,7 @@ void _toggleFullScreen() {
 
     try {
       if (Platform.isAndroid) {
-        final floating = floating.Floating();
+        final floating = Float.Floating();
         final isAvailable = await floating.isPipAvailable;
 
         if (!isAvailable) {
@@ -1296,12 +1296,12 @@ void _toggleFullScreen() {
           return;
         }
 
-        final status = await floating.enable(ImmediatePiP(
-          aspectRatio: floating.Rational(
+        final status = await floating.enable(Float.ImmediatePiP(
+          aspectRatio: Float.Rational(
             _controller.value.size.width.toInt(),
             _controller.value.size.height.toInt(),
           ),
-          sourceRectHint: floating.Rectangle<int>(
+          sourceRectHint: Rectangle<int>(
             0,
             0,
             _controller.value.size.width.toInt(),
@@ -1309,7 +1309,7 @@ void _toggleFullScreen() {
           ),
         ));
 
-        if (status == floating.PiPStatus.enabled) {
+        if (status == Float.PiPStatus.enabled) {
           setState(() => _isInPipMode = true);
         }
       } else if (Platform.isIOS) {
@@ -1364,7 +1364,7 @@ void _toggleFullScreen() {
     }
           
         } else {
-          final floating = Floating();
+          final floating = Float.Floating();
           await floating.cancelOnLeavePiP();
         }
         setState(() => _isInPipMode = false);
