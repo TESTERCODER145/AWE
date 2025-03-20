@@ -686,41 +686,28 @@ Offset _pipPosition = Offset(20, 20);
 double _pipSize = 200;
 void _togglePip() async {
   if (Platform.isIOS) {
-    // Handle native iOS PiP using AVKit
-    if (_isInPipMode) {
-      await _pipChannel.invokeMethod('stopPip');
-      setState(() => _isInPipMode = false);
-    } else {
-      final position = _controller.value.position;
-      await _pipChannel.invokeMethod('startPip', {
-        'path': widget.filePath,
-        'position': position.inMilliseconds.toDouble(),
-      });
-      setState(() => _isInPipMode = true);
-    }
-  } else {
-    // Android: Custom PiP overlay
+    // Use custom PiP overlay for iOS
     setState(() {
       _showPip = !_showPip;
       if (_showPip) {
-        // Save current state when entering PiP
+        // Save current playback state
         _isPlaying = _controller.value.isPlaying;
         _controller.pause();
         // Set initial PiP position
         _pipPosition = Offset(
           MediaQuery.of(context).size.width - _pipSize - 20,
-          MediaQuery.of(context).size.height - (_pipSize * 9/16) - 20,
+          MediaQuery.of(context).size.height - (_pipSize * 9 / 16) - 20,
         );
       } else {
-        // Restore playback state when closing PiP
+        // Restore playback when closing PiP
         if (_isPlaying) _controller.play();
       }
     });
-    
-    // For Android native PiP (optional - remove if using custom overlay only)
-    if (!_showPip && _isInPipMode) {
+  } else {
+    // Android: Existing native PiP logic
+    if (_isInPipMode) {
       await _exitPipMode();
-    } else if (_showPip && !_isInPipMode) {
+    } else {
       await _enterPipMode();
     }
   }
@@ -734,6 +721,12 @@ Widget _buildPipOverlay() {
       onPanUpdate: (details) {
         setState(() => _pipPosition += details.delta);
       },
+      onTap: () {
+        setState(() {
+          _showPip = false;
+          if (_isPlaying) _controller.play();
+        });
+      },
       child: Container(
         width: _pipSize,
         height: _pipSize * 9 / 16,
@@ -743,11 +736,7 @@ Widget _buildPipOverlay() {
         ),
         child: Stack(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: VideoPlayer(_controller),
-            ),
-            // Play/Pause Control
+            VideoPlayer(_controller),
             Positioned.fill(
               child: IconButton(
                 icon: Icon(
@@ -755,39 +744,6 @@ Widget _buildPipOverlay() {
                   color: Colors.white,
                 ),
                 onPressed: _togglePlayPause,
-              ),
-            ),
-            // Control Bar
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                color: Colors.black54,
-                padding: EdgeInsets.symmetric(horizontal: 8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.fullscreen, color: Colors.white),
-                      onPressed: () {
-                        setState(() {
-                          _showPip = false;
-                          _controller.play();
-                        });
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.close, color: Colors.white),
-                      onPressed: () {
-                        setState(() {
-                          _showPip = false;
-                          _controller.pause();
-                        });
-                      },
-                    ),
-                  ],
-                ),
               ),
             ),
           ],
@@ -1433,7 +1389,7 @@ Widget build(BuildContext context) {
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          if (!_isInPipMode)
+          if (!_isInPipMode && !_showPip)
             GestureDetector(
               onTap: _toggleControls,
               onVerticalDragStart: _handleVerticalDragStart,

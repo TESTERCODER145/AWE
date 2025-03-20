@@ -79,6 +79,7 @@ dependencies:
   crypto: ^3.0.6
   flutter_in_app_pip: ^1.7.4
   fl_pip: ^3.2.1
+  pip_view: ^0.9.7
 
 
 dev_dependencies:
