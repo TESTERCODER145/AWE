@@ -1,0 +1,1252 @@
+[
+    {
+        "value": "AD",
+        "label": "أندورا",
+        "dialvalue": "+376"
+    },
+    {
+        "value": "AE",
+        "label": "الامارات العربية المتحدة",
+        "dialvalue": "+971"
+    },
+    {
+        "value": "AF",
+        "label": "أفغانستان",
+        "dialvalue": "+93"
+    },
+    {
+        "value": "AG",
+        "label": "أنتيجوا وبربودا",
+        "dialvalue": "+1"
+    },
+    {
+        "value": "AI",
+        "label": "أنجويلا",
+        "dialvalue": "+1"
+    },
+    {
+        "value": "AL",
+        "label": "ألبانيا",
+        "dialvalue": "+355"
+    },
+    {
+        "value": "AM",
+        "label": "أرمينيا",
+        "dialvalue": "+374"
+    },
+    {
+        "value": "AO",
+        "label": "أنجولا",
+        "dialvalue": "+244"
+    },
+    {
+        "value": "AQ",
+        "label": "القطب الجنوبي",
+        "dialvalue": "+672"
+    },
+    {
+        "value": "AR",
+        "label": "الأرجنتين",
+        "dialvalue": "+54"
+    },
+    {
+        "value": "AS",
+        "label": "ساموا الأمريكية",
+        "dialvalue": "+1"
+    },
+    {
+        "value": "AT",
+        "label": "النمسا",
+        "dialvalue": "+43"
+    },
+    {
+        "value": "AU",
+        "label": "أستراليا",
+        "dialvalue": "+61"
+    },
+    {
+        "value": "AW",
+        "label": "آروبا",
+        "dialvalue": "+297"
+    },
+    {
+        "value": "AX",
+        "label": "جزر أولان",
+        "dialvalue": "+358"
+    },
+    {
+        "value": "AZ",
+        "label": "أذربيجان",
+        "dialvalue": "+994"
+    },
+    {
+        "value": "BA",
+        "label": "البوسنة والهرسك",
+        "dialvalue": "+387"
+    },
+    {
+        "value": "BB",
+        "label": "بربادوس",
+        "dialvalue": "+1"
+    },
+    {
+        "value": "BD",
+        "label": "بنجلاديش",
+        "dialvalue": "+880"
+    },
+    {
+        "value": "BE",
+        "label": "بلجيكا",
+        "dialvalue": "+32"
+    },
+    {
+        "value": "BF",
+        "label": "بوركينا فاسو",
+        "dialvalue": "+226"
+    },
+    {
+        "value": "BG",
+        "label": "بلغاريا",
+        "dialvalue": "+359"
+    },
+    {
+        "value": "BH",
+        "label": "البحرين",
+        "dialvalue": "+973"
+    },
+    {
+        "value": "BI",
+        "label": "بوروندي",
+        "dialvalue": "+257"
+    },
+    {
+        "value": "BJ",
+        "label": "بنين",
+        "dialvalue": "+229"
+    },
+    {
+        "value": "BL",
+        "label": "سان بارتيلمي",
+        "dialvalue": "+590"
+    },
+    {
+        "value": "BM",
+        "label": "برمودا",
+        "dialvalue": "+1"
+    },
+    {
+        "value": "BN",
+        "label": "بروناي",
+        "dialvalue": "+673"
+    },
+    {
+        "value": "BO",
+        "label": "بوليفيا",
+        "dialvalue": "+591"
+    },
+    {
+        "value": "BQ",
+        "label": "بونير",
+        "dialvalue": "+599"
+    },
+    {
+        "value": "BR",
+        "label": "البرازيل",
+        "dialvalue": "+55"
+    },
+    {
+        "value": "BS",
+        "label": "الباهاما",
+        "dialvalue": "+1"
+    },
+    {
+        "value": "BT",
+        "label": "بوتان",
+        "dialvalue": "+975"
+    },
+    {
+        "value": "BV",
+        "label": "جزيرة بوفيه",
+        "dialvalue": "+47"
+    },
+    {
+        "value": "BW",
+        "label": "بتسوانا",
+        "dialvalue": "+267"
+    },
+    {
+        "value": "BY",
+        "label": "روسيا البيضاء",
+        "dialvalue": "+375"
+    },
+    {
+        "value": "BZ",
+        "label": "بليز",
+        "dialvalue": "+501"
+    },
+    {
+        "value": "CA",
+        "label": "كندا",
+        "dialvalue": "+1"
+    },
+    {
+        "value": "CC",
+        "label": "جزر كوكوس",
+        "dialvalue": "+61"
+    },
+    {
+        "value": "CD",
+        "label": "جمهورية الكونغو الديمقراطية",
+        "dialvalue": "+243"
+    },
+    {
+        "value": "CF",
+        "label": "جمهورية افريقيا الوسطى",
+        "dialvalue": "+236"
+    },
+    {
+        "value": "CG",
+        "label": "الكونغو - برازافيل",
+        "dialvalue": "+242"
+    },
+    {
+        "value": "CH",
+        "label": "سويسرا",
+        "dialvalue": "+41"
+    },
+    {
+        "value": "CI",
+        "label": "ساحل العاج",
+        "dialvalue": "+225"
+    },
+    {
+        "value": "CK",
+        "label": "جزر كوك",
+        "dialvalue": "+682"
+    },
+    {
+        "value": "CL",
+        "label": "شيلي",
+        "dialvalue": "+56"
+    },
+    {
+        "value": "CM",
+        "label": "الكاميرون",
+        "dialvalue": "+237"
+    },
+    {
+        "value": "CN",
+        "label": "الصين",
+        "dialvalue": "+86"
+    },
+    {
+        "value": "CO",
+        "label": "كولومبيا",
+        "dialvalue": "+57"
+    },
+    {
+        "value": "CR",
+        "label": "كوستاريكا",
+        "dialvalue": "+506"
+    },
+    {
+        "value": "CU",
+        "label": "كوبا",
+        "dialvalue": "+53"
+    },
+    {
+        "value": "CV",
+        "label": "الرأس الأخضر",
+        "dialvalue": "+238"
+    },
+    {
+        "value": "CW",
+        "label": "كوراساو",
+        "dialvalue": "+599"
+    },
+    {
+        "value": "CX",
+        "label": "جزيرة الكريسماس",
+        "dialvalue": "+61"
+    },
+    {
+        "value": "CY",
+        "label": "قبرص",
+        "dialvalue": "+357"
+    },
+    {
+        "value": "CZ",
+        "label": "جمهورية التشيك",
+        "dialvalue": "+420"
+    },
+    {
+        "value": "DE",
+        "label": "ألمانيا",
+        "dialvalue": "+49"
+    },
+    {
+        "value": "DJ",
+        "label": "جيبوتي",
+        "dialvalue": "+253"
+    },
+    {
+        "value": "DK",
+        "label": "الدانمرك",
+        "dialvalue": "+45"
+    },
+    {
+        "value": "DM",
+        "label": "دومينيكا",
+        "dialvalue": "+1"
+    },
+    {
+        "value": "DO",
+        "label": "جمهورية الدومينيك",
+        "dialvalue": "+1"
+    },
+    {
+        "value": "DZ",
+        "label": "الجزائر",
+        "dialvalue": "+213"
+    },
+    {
+        "value": "EC",
+        "label": "الاكوادور",
+        "dialvalue": "+593"
+    },
+    {
+        "value": "EE",
+        "label": "استونيا",
+        "dialvalue": "+372"
+    },
+    {
+        "value": "EG",
+        "label": "مصر",
+        "dialvalue": "+20"
+    },
+    {
+        "value": "EH",
+        "label": "الصحراء الغربية",
+        "dialvalue": "+212"
+    },
+    {
+        "value": "ER",
+        "label": "اريتريا",
+        "dialvalue": "+291"
+    },
+    {
+        "value": "ES",
+        "label": "أسبانيا",
+        "dialvalue": "+34"
+    },
+    {
+        "value": "ET",
+        "label": "اثيوبيا",
+        "dialvalue": "+251"
+    },
+    {
+        "value": "FI",
+        "label": "فنلندا",
+        "dialvalue": "+358"
+    },
+    {
+        "value": "FJ",
+        "label": "فيجي",
+        "dialvalue": "+679"
+    },
+    {
+        "value": "FK",
+        "label": "جزر فوكلاند",
+        "dialvalue": "+500"
+    },
+    {
+        "value": "FM",
+        "label": "ميكرونيزيا",
+        "dialvalue": "+691"
+    },
+    {
+        "value": "FO",
+        "label": "جزر فارو",
+        "dialvalue": "+298"
+    },
+    {
+        "value": "FR",
+        "label": "فرنسا",
+        "dialvalue": "+33"
+    },
+    {
+        "value": "GA",
+        "label": "الجابون",
+        "dialvalue": "+241"
+    },
+    {
+        "value": "GB",
+        "label": "المملكة المتحدة",
+        "dialvalue": "+44"
+    },
+    {
+        "value": "GD",
+        "label": "جرينادا",
+        "dialvalue": "+1"
+    },
+    {
+        "value": "GE",
+        "label": "جورجيا",
+        "dialvalue": "+995"
+    },
+    {
+        "value": "GF",
+        "label": "غويانا",
+        "dialvalue": "+594"
+    },
+    {
+        "value": "GG",
+        "label": "غيرنزي",
+        "dialvalue": "+44"
+    },
+    {
+        "value": "GH",
+        "label": "غانا",
+        "dialvalue": "+233"
+    },
+    {
+        "value": "GI",
+        "label": "جبل طارق",
+        "dialvalue": "+350"
+    },
+    {
+        "value": "GL",
+        "label": "جرينلاند",
+        "dialvalue": "+299"
+    },
+    {
+        "value": "GM",
+        "label": "غامبيا",
+        "dialvalue": "+220"
+    },
+    {
+        "value": "GN",
+        "label": "غينيا",
+        "dialvalue": "+224"
+    },
+    {
+        "value": "GP",
+        "label": "جوادلوب",
+        "dialvalue": "+590"
+    },
+    {
+        "value": "GQ",
+        "label": "غينيا الاستوائية",
+        "dialvalue": "+240"
+    },
+    {
+        "value": "GR",
+        "label": "اليونان",
+        "dialvalue": "+30"
+    },
+    {
+        "value": "GS",
+        "label": "جورجيا الجنوبية وجزر ساندويتش الجنوبية",
+        "dialvalue": "+500"
+    },
+    {
+        "value": "GT",
+        "label": "جواتيمالا",
+        "dialvalue": "+502"
+    },
+    {
+        "value": "GU",
+        "label": "جوام",
+        "dialvalue": "+1"
+    },
+    {
+        "value": "GW",
+        "label": "غينيا بيساو",
+        "dialvalue": "+245"
+    },
+    {
+        "value": "GY",
+        "label": "غيانا",
+        "dialvalue": "+595"
+    },
+    {
+        "value": "HK",
+        "label": "هونج كونج الصينية",
+        "dialvalue": "+852"
+    },
+    {
+        "value": "HM",
+        "label": "جزيرة هيرد وماكدونالد",
+        "dialvalue": ""
+    },
+    {
+        "value": "HN",
+        "label": "هندوراس",
+        "dialvalue": "+504"
+    },
+    {
+        "value": "HR",
+        "label": "كرواتيا",
+        "dialvalue": "+385"
+    },
+    {
+        "value": "HT",
+        "label": "هايتي",
+        "dialvalue": "+509"
+    },
+    {
+        "value": "HU",
+        "label": "المجر",
+        "dialvalue": "+36"
+    },
+    {
+        "value": "ID",
+        "label": "اندونيسيا",
+        "dialvalue": "+62"
+    },
+    {
+        "value": "IE",
+        "label": "أيرلندا",
+        "dialvalue": "+353"
+    },
+    {
+        "value": "IL",
+        "label": "اسرائيل",
+        "dialvalue": "+972"
+    },
+    {
+        "value": "IM",
+        "label": "جزيرة مان",
+        "dialvalue": "+44"
+    },
+    {
+        "value": "IN",
+        "label": "الهند",
+        "dialvalue": "+91"
+    },
+    {
+        "value": "IO",
+        "label": "المحيط الهندي البريطاني",
+        "dialvalue": "+246"
+    },
+    {
+        "value": "IQ",
+        "label": "العراق",
+        "dialvalue": "+964"
+    },
+    {
+        "value": "IR",
+        "label": "ايران",
+        "dialvalue": "+98"
+    },
+    {
+        "value": "IS",
+        "label": "أيسلندا",
+        "dialvalue": "+354"
+    },
+    {
+        "value": "IT",
+        "label": "ايطاليا",
+        "dialvalue": "+39"
+    },
+    {
+        "value": "JE",
+        "label": "جيرسي",
+        "dialvalue": "+44"
+    },
+    {
+        "value": "JM",
+        "label": "جامايكا",
+        "dialvalue": "+1"
+    },
+    {
+        "value": "JO",
+        "label": "الأردن",
+        "dialvalue": "+962"
+    },
+    {
+        "value": "JP",
+        "label": "اليابان",
+        "dialvalue": "+81"
+    },
+    {
+        "value": "KE",
+        "label": "كينيا",
+        "dialvalue": "+254"
+    },
+    {
+        "value": "KG",
+        "label": "قرغيزستان",
+        "dialvalue": "+996"
+    },
+    {
+        "value": "KH",
+        "label": "كمبوديا",
+        "dialvalue": "+855"
+    },
+    {
+        "value": "KI",
+        "label": "كيريباتي",
+        "dialvalue": "+686"
+    },
+    {
+        "value": "KM",
+        "label": "جزر القمر",
+        "dialvalue": "+269"
+    },
+    {
+        "value": "KN",
+        "label": "سانت كيتس ونيفيس",
+        "dialvalue": "+1"
+    },
+    {
+        "value": "KP",
+        "label": "كوريا الشمالية",
+        "dialvalue": "+850"
+    },
+    {
+        "value": "KR",
+        "label": "كوريا الجنوبية",
+        "dialvalue": "+82"
+    },
+    {
+        "value": "KW",
+        "label": "الكويت",
+        "dialvalue": "+965"
+    },
+    {
+        "value": "KY",
+        "label": "جزر الكايمن",
+        "dialvalue": "+345"
+    },
+    {
+        "value": "KZ",
+        "label": "كازاخستان",
+        "dialvalue": "+7"
+    },
+    {
+        "value": "LA",
+        "label": "لاوس",
+        "dialvalue": "+856"
+    },
+    {
+        "value": "LB",
+        "label": "لبنان",
+        "dialvalue": "+961"
+    },
+    {
+        "value": "LC",
+        "label": "سانت لوسيا",
+        "dialvalue": "+1"
+    },
+    {
+        "value": "LI",
+        "label": "ليختنشتاين",
+        "dialvalue": "+423"
+    },
+    {
+        "value": "LK",
+        "label": "سريلانكا",
+        "dialvalue": "+94"
+    },
+    {
+        "value": "LR",
+        "label": "ليبيريا",
+        "dialvalue": "+231"
+    },
+    {
+        "value": "LS",
+        "label": "ليسوتو",
+        "dialvalue": "+266"
+    },
+    {
+        "value": "LT",
+        "label": "ليتوانيا",
+        "dialvalue": "+370"
+    },
+    {
+        "value": "LU",
+        "label": "لوكسمبورج",
+        "dialvalue": "+352"
+    },
+    {
+        "value": "LV",
+        "label": "لاتفيا",
+        "dialvalue": "+371"
+    },
+    {
+        "value": "LY",
+        "label": "ليبيا",
+        "dialvalue": "+218"
+    },
+    {
+        "value": "MA",
+        "label": "المغرب",
+        "dialvalue": "+212"
+    },
+    {
+        "value": "MC",
+        "label": "موناكو",
+        "dialvalue": "+377"
+    },
+    {
+        "value": "MD",
+        "label": "مولدافيا",
+        "dialvalue": "+373"
+    },
+    {
+        "value": "ME",
+        "label": "الجبل الأسود",
+        "dialvalue": "+382"
+    },
+    {
+        "value": "MF",
+        "label": "سانت مارتين",
+        "dialvalue": "+590"
+    },
+    {
+        "value": "MG",
+        "label": "مدغشقر",
+        "dialvalue": "+261"
+    },
+    {
+        "value": "MH",
+        "label": "جزر المارشال",
+        "dialvalue": "+692"
+    },
+    {
+        "value": "MK",
+        "label": "مقدونيا",
+        "dialvalue": "+389"
+    },
+    {
+        "value": "ML",
+        "label": "مالي",
+        "dialvalue": "+223"
+    },
+    {
+        "value": "MM",
+        "label": "ميانمار",
+        "dialvalue": "+95"
+    },
+    {
+        "value": "MN",
+        "label": "منغوليا",
+        "dialvalue": "+976"
+    },
+    {
+        "value": "MO",
+        "label": "ماكاو الصينية",
+        "dialvalue": "+853"
+    },
+    {
+        "value": "MP",
+        "label": "جزر ماريانا الشمالية",
+        "dialvalue": "+1"
+    },
+    {
+        "value": "MQ",
+        "label": "مارتينيك",
+        "dialvalue": "+596"
+    },
+    {
+        "value": "MR",
+        "label": "موريتانيا",
+        "dialvalue": "+222"
+    },
+    {
+        "value": "MS",
+        "label": "مونتسرات",
+        "dialvalue": "+1"
+    },
+    {
+        "value": "MT",
+        "label": "مالطا",
+        "dialvalue": "+356"
+    },
+    {
+        "value": "MU",
+        "label": "موريشيوس",
+        "dialvalue": "+230"
+    },
+    {
+        "value": "MV",
+        "label": "جزر الملديف",
+        "dialvalue": "+960"
+    },
+    {
+        "value": "MW",
+        "label": "ملاوي",
+        "dialvalue": "+265"
+    },
+    {
+        "value": "MX",
+        "label": "المكسيك",
+        "dialvalue": "+52"
+    },
+    {
+        "value": "MY",
+        "label": "ماليزيا",
+        "dialvalue": "+60"
+    },
+    {
+        "value": "MZ",
+        "label": "موزمبيق",
+        "dialvalue": "+258"
+    },
+    {
+        "value": "NA",
+        "label": "ناميبيا",
+        "dialvalue": "+264"
+    },
+    {
+        "value": "NC",
+        "label": "كاليدونيا الجديدة",
+        "dialvalue": "+687"
+    },
+    {
+        "value": "NE",
+        "label": "النيجر",
+        "dialvalue": "+227"
+    },
+    {
+        "value": "NF",
+        "label": "جزيرة نورفوك",
+        "dialvalue": "+672"
+    },
+    {
+        "value": "NG",
+        "label": "نيجيريا",
+        "dialvalue": "+234"
+    },
+    {
+        "value": "NI",
+        "label": "نيكاراجوا",
+        "dialvalue": "+505"
+    },
+    {
+        "value": "NL",
+        "label": "هولندا",
+        "dialvalue": "+31"
+    },
+    {
+        "value": "NO",
+        "label": "النرويج",
+        "dialvalue": "+47"
+    },
+    {
+        "value": "NP",
+        "label": "نيبال",
+        "dialvalue": "+977"
+    },
+    {
+        "value": "NR",
+        "label": "نورو",
+        "dialvalue": "+674"
+    },
+    {
+        "value": "NU",
+        "label": "نيوي",
+        "dialvalue": "+683"
+    },
+    {
+        "value": "NZ",
+        "label": "نيوزيلاندا",
+        "dialvalue": "+64"
+    },
+    {
+        "value": "OM",
+        "label": "عمان",
+        "dialvalue": "+968"
+    },
+    {
+        "value": "PA",
+        "label": "بنما",
+        "dialvalue": "+507"
+    },
+    {
+        "value": "PE",
+        "label": "بيرو",
+        "dialvalue": "+51"
+    },
+    {
+        "value": "PF",
+        "label": "بولينيزيا الفرنسية",
+        "dialvalue": "+689"
+    },
+    {
+        "value": "PG",
+        "label": "بابوا غينيا الجديدة",
+        "dialvalue": "+675"
+    },
+    {
+        "value": "PH",
+        "label": "الفيلبين",
+        "dialvalue": "+63"
+    },
+    {
+        "value": "PK",
+        "label": "باكستان",
+        "dialvalue": "+92"
+    },
+    {
+        "value": "PL",
+        "label": "بولندا",
+        "dialvalue": "+48"
+    },
+    {
+        "value": "PM",
+        "label": "سانت بيير وميكولون",
+        "dialvalue": "+508"
+    },
+    {
+        "value": "PN",
+        "label": "بتكايرن",
+        "dialvalue": "+872"
+    },
+    {
+        "value": "PR",
+        "label": "بورتوريكو",
+        "dialvalue": "+1"
+    },
+    {
+        "value": "PS",
+        "label": "فلسطين",
+        "dialvalue": "+970"
+    },
+    {
+        "value": "PT",
+        "label": "البرتغال",
+        "dialvalue": "+351"
+    },
+    {
+        "value": "PW",
+        "label": "بالاو",
+        "dialvalue": "+680"
+    },
+    {
+        "value": "PY",
+        "label": "باراجواي",
+        "dialvalue": "+595"
+    },
+    {
+        "value": "QA",
+        "label": "قطر",
+        "dialvalue": "+974"
+    },
+    {
+        "value": "RE",
+        "label": "روينيون",
+        "dialvalue": "+262"
+    },
+    {
+        "value": "RO",
+        "label": "رومانيا",
+        "dialvalue": "+40"
+    },
+    {
+        "value": "RS",
+        "label": "صربيا",
+        "dialvalue": "+381"
+    },
+    {
+        "value": "RU",
+        "label": "روسيا",
+        "dialvalue": "+7"
+    },
+    {
+        "value": "RW",
+        "label": "رواندا",
+        "dialvalue": "+250"
+    },
+    {
+        "value": "SA",
+        "label": "المملكة العربية السعودية",
+        "dialvalue": "+966"
+    },
+    {
+        "value": "SB",
+        "label": "جزر سليمان",
+        "dialvalue": "+677"
+    },
+    {
+        "value": "SC",
+        "label": "سيشل",
+        "dialvalue": "+248"
+    },
+    {
+        "value": "SD",
+        "label": "السودان",
+        "dialvalue": "+249"
+    },
+    {
+        "value": "SE",
+        "label": "السويد",
+        "dialvalue": "+46"
+    },
+    {
+        "value": "SG",
+        "label": "سنغافورة",
+        "dialvalue": "+65"
+    },
+    {
+        "value": "SH",
+        "label": "سانت هيلنا",
+        "dialvalue": "+290"
+    },
+    {
+        "value": "SI",
+        "label": "سلوفينيا",
+        "dialvalue": "+386"
+    },
+    {
+        "value": "SJ",
+        "label": "سفالبارد وجان مايان",
+        "dialvalue": "+47"
+    },
+    {
+        "value": "SK",
+        "label": "سلوفاكيا",
+        "dialvalue": "+421"
+    },
+    {
+        "value": "SL",
+        "label": "سيراليون",
+        "dialvalue": "+232"
+    },
+    {
+        "value": "SM",
+        "label": "سان مارينو",
+        "dialvalue": "+378"
+    },
+    {
+        "value": "SN",
+        "label": "السنغال",
+        "dialvalue": "+221"
+    },
+    {
+        "value": "SO",
+        "label": "الصومال",
+        "dialvalue": "+252"
+    },
+    {
+        "value": "SR",
+        "label": "سورينام",
+        "dialvalue": "+597"
+    },
+    {
+        "value": "SS",
+        "label": "جنوب السودان",
+        "dialvalue": "+211"
+    },
+    {
+        "value": "ST",
+        "label": "ساو تومي وبرينسيبي",
+        "dialvalue": "+239"
+    },
+    {
+        "value": "SV",
+        "label": "السلفادور",
+        "dialvalue": "+503"
+    },
+    {
+        "value": "SX",
+        "label": "سينت مارتن",
+        "dialvalue": "+1"
+    },
+    {
+        "value": "SY",
+        "label": "سوريا",
+        "dialvalue": "+963"
+    },
+    {
+        "value": "SZ",
+        "label": "سوازيلاند",
+        "dialvalue": "+268"
+    },
+    {
+        "value": "TC",
+        "label": "جزر الترك وجايكوس",
+        "dialvalue": "+1"
+    },
+    {
+        "value": "TD",
+        "label": "تشاد",
+        "dialvalue": "+235"
+    },
+    {
+        "value": "TF",
+        "label": "المقاطعات الجنوبية الفرنسية",
+        "dialvalue": "+262"
+    },
+    {
+        "value": "TG",
+        "label": "توجو",
+        "dialvalue": "+228"
+    },
+    {
+        "value": "TH",
+        "label": "تايلند",
+        "dialvalue": "+66"
+    },
+    {
+        "value": "TJ",
+        "label": "طاجكستان",
+        "dialvalue": "+992"
+    },
+    {
+        "value": "TK",
+        "label": "توكيلو",
+        "dialvalue": "+690"
+    },
+    {
+        "value": "TL",
+        "label": "تيمور الشرقية",
+        "dialvalue": "+670"
+    },
+    {
+        "value": "TM",
+        "label": "تركمانستان",
+        "dialvalue": "+993"
+    },
+    {
+        "value": "TN",
+        "label": "تونس",
+        "dialvalue": "+216"
+    },
+    {
+        "value": "TO",
+        "label": "تونجا",
+        "dialvalue": "+676"
+    },
+    {
+        "value": "TR",
+        "label": "تركيا",
+        "dialvalue": "+90"
+    },
+    {
+        "value": "TT",
+        "label": "ترينيداد وتوباغو",
+        "dialvalue": "+1"
+    },
+    {
+        "value": "TV",
+        "label": "توفالو",
+        "dialvalue": "+688"
+    },
+    {
+        "value": "TW",
+        "label": "تايوان",
+        "dialvalue": "+886"
+    },
+    {
+        "value": "TZ",
+        "label": "تانزانيا",
+        "dialvalue": "+255"
+    },
+    {
+        "value": "UA",
+        "label": "أوكرانيا",
+        "dialvalue": "+380"
+    },
+    {
+        "value": "UG",
+        "label": "أوغندا",
+        "dialvalue": "+256"
+    },
+    {
+        "value": "UM",
+        "label": "جزر الولايات المتحدة البعيدة الصغيرة",
+        "dialvalue": ""
+    },
+    {
+        "value": "US",
+        "label": "الولايات المتحدة الأمريكية",
+        "dialvalue": "+1"
+    },
+    {
+        "value": "UY",
+        "label": "أورجواي",
+        "dialvalue": "+598"
+    },
+    {
+        "value": "UZ",
+        "label": "أوزبكستان",
+        "dialvalue": "+998"
+    },
+    {
+        "value": "VA",
+        "label": "الفاتيكان",
+        "dialvalue": "+379"
+    },
+    {
+        "value": "VC",
+        "label": "سانت فنسنت وغرنادين",
+        "dialvalue": "+1"
+    },
+    {
+        "value": "VE",
+        "label": "فنزويلا",
+        "dialvalue": "+58"
+    },
+    {
+        "value": "VG",
+        "label": "جزر فرجين البريطانية",
+        "dialvalue": "+1"
+    },
+    {
+        "value": "VI",
+        "label": "جزر فرجين الأمريكية",
+        "dialvalue": "+1"
+    },
+    {
+        "value": "VN",
+        "label": "فيتنام",
+        "dialvalue": "+84"
+    },
+    {
+        "value": "VU",
+        "label": "فانواتو",
+        "dialvalue": "+678"
+    },
+    {
+        "value": "WF",
+        "label": "جزر والس وفوتونا",
+        "dialvalue": "+681"
+    },
+    {
+        "value": "WS",
+        "label": "ساموا",
+        "dialvalue": "+685"
+    },
+    {
+        "value": "XK",
+        "label": "كوسوفو",
+        "dialvalue": "+383"
+    },
+    {
+        "value": "YE",
+        "label": "اليمن",
+        "dialvalue": "+967"
+    },
+    {
+        "value": "YT",
+        "label": "مايوت",
+        "dialvalue": "+262"
+    },
+    {
+        "value": "ZA",
+        "label": "جمهورية جنوب افريقيا",
+        "dialvalue": "+27"
+    },
+    {
+        "value": "ZM",
+        "label": "زامبيا",
+        "dialvalue": "+260"
+    },
+    {
+        "value": "ZW",
+        "label": "زيمبابوي",
+        "dialvalue": "+263"
+    }
+]

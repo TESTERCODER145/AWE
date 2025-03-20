@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>CFBundleDevelopmentRegion</key>
+  <string>$(DEVELOPMENT_LANGUAGE)</string>
+  <key>CFBundleDisplayName</key>
+  <string>Downloadsplatform</string>
+  <key>CFBundleExecutable</key>
+  <string>$(EXECUTABLE_NAME)</string>
+  <key>CFBundleIdentifier</key>
+  <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+  <key>CFBundleInfoDictionaryVersion</key>
+  <string>6.0</string>
+  <key>CFBundleName</key>
+  <string>downloadsplatform</string>
+  <key>CFBundlePackageType</key>
+  <string>APPL</string>
+  <key>CFBundleShortVersionString</key>
+  <string>$(FLUTTER_BUILD_NAME)</string>
+  <key>CFBundleSignature</key>
+  <string>DWNL</string>
+  <key>CFBundleVersion</key>
+  <string>$(FLUTTER_BUILD_NUMBER)</string>
+  <key>LSRequiresIPhoneOS</key>
+  <true/>
+
+  <!-- Launch Screen Configuration -->
+  <key>UILaunchStoryboardName</key>
+  <string>LaunchScreen</string>
+  <key>UIMainStoryboardFile</key>
+  <string>Main</string>
+  <!-- Supported Orientations for iPhone -->
+  <key>UISupportedInterfaceOrientations</key>
+  <array>
+    <string>UIInterfaceOrientationPortrait</string>
+    <string>UIInterfaceOrientationLandscapeLeft</string>
+    <string>UIInterfaceOrientationLandscapeRight</string>
+  </array>
+
+  <!-- Supported Orientations for iPad -->
+  <key>UISupportedInterfaceOrientations~ipad</key>
+  <array>
+    <string>UIInterfaceOrientationPortrait</string>
+    
+    <string>UIInterfaceOrientationLandscapeLeft</string>
+    <string>UIInterfaceOrientationLandscapeRight</string>
+  </array>
+
+  <!-- Photo Library Access -->
+  <key>NSPhotoLibraryUsageDescription</key>
+  <string>This app needs access to your photo library to save files</string>
+  <key>NSAppTransportSecurity</key>
+  <dict>
+    <key>NSAllowsArbitraryLoads</key>
+    <true/>
+  </dict>
+  <key>UIViewControllerBasedStatusBarAppearance</key>
+<false/>
+
+
+  <!-- Biometric Authentication -->
+  <key>NSFaceIDUsageDescription</key>
+  <string>نحتاج إلى المصادقة البيومترية لتأمين التطبيق</string>
+  <key>FacebookAppID</key>
+  <string>1107497114301367</string>
+  <key>FacebookClientToken</key>
+  <string>40d129c1c48f67f19257a722de5c22fe</string>
+
+  <key>NSPhotoLibraryAddUsageDescription</key>
+  <string>We need access to save files to your library.</string>
+  <key>NSAppleMusicUsageDescription</key>
+  <string>We need access to save media files.</string>
+
+  <!-- Background Modes -->
+  <key>UIBackgroundModes</key>
+<array>
+    <string>audio</string>
+    <string>fetch</string>
+    <string>processing</string>
+</array>
+<key>NSBonjourServices</key>
+<array>
+    <string>_dartobservatory._tcp</string>
+</array>
+<key>NSLocalNetworkUsageDescription</key>
+<string>This app needs access to the local network for debugging purposes.</string>
+
+<key>AVAudioSessionCategoryOptions</key>
+<array>
+    <string>AVAudioSessionCategoryOptionMixWithOthers</string>
+</array>
+
+  <!-- Notifications -->
+  <key>NSUserNotificationCenterUsageDescription</key>
+  <string>This app needs to send you notifications</string>
+
+  <!-- iOS 10+ notification settings -->
+  <key>UNUserNotificationCenterDelegateClassName</key>
+  <string>$(PRODUCT_MODULE_NAME).NotificationDelegate</string>
+   <key>UIFileSharingEnabled</key>
+   <true/>
+   <key>LSSupportsOpeningDocumentsInPlace</key>
+   <true/>
+  <!-- Other Keys -->
+  <key>CADisableMinimumFrameDurationOnPhone</key>
+  <true/>
+  <key>UIApplicationSupportsIndirectInputEvents</key>
+  <true/>
+</dict>
+</plist>

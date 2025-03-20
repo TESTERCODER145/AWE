@@ -1,0 +1,98 @@
+{
+  "project_info": {
+    "project_number": "714082612352",
+    "project_id": "downloader-874df",
+    "storage_bucket": "downloader-874df.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:714082612352:android:8399dd2985c4741feda265",
+        "android_client_info": {
+          "package_name": "com.example.downloader"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "714082612352-su1ktrq45uonjjm2ed1btnl4ck247u2a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.downloader",
+            "certificate_hash": "08479480d5e44219a9eb157bc88d850c770282bd"
+          }
+        },
+        {
+          "client_id": "714082612352-ssdb2t30j6jnpjmu1849som500j5d9b0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPwmurnHePjX5dzB8uYdTy1P8PZLuY0hc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "714082612352-ssdb2t30j6jnpjmu1849som500j5d9b0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "714082612352-9gvhus596ic2193q8d8nka6983d7hi1m.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.downloader"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:714082612352:android:3fdf1bd1f343d71aeda265",
+        "android_client_info": {
+          "package_name": "com.example.downloadsplatform"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "714082612352-2v3a4gb0taohvdk45pmr2kb3ckq8t6v4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.downloadsplatform",
+            "certificate_hash": "08479480d5e44219a9eb157bc88d850c770282bd"
+          }
+        },
+        {
+          "client_id": "714082612352-ssdb2t30j6jnpjmu1849som500j5d9b0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPwmurnHePjX5dzB8uYdTy1P8PZLuY0hc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "714082612352-ssdb2t30j6jnpjmu1849som500j5d9b0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "714082612352-9gvhus596ic2193q8d8nka6983d7hi1m.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.downloader"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

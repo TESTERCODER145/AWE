@@ -1,0 +1,56 @@
+name: iOS-ipa-build
+on:
+  workflow_dispatch:
+jobs:
+  build-ios:
+    name: 🎉 iOS Build
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          architecture: x64
+      
+      - name: Flutter pub get
+        run: flutter pub get
+      
+      - name: Pod repo update
+        working-directory: ios
+        run: pod repo update
+      
+      # Create an archive first
+      - name: Build iOS Archive
+        run: flutter build ios --release --no-codesign
+      
+      # Create proper IPA structure
+      - name: Create Payload directory
+        run: mkdir -p Payload
+        working-directory: build/ios/iphoneos
+      
+      - name: Move app to Payload
+        run: cp -R Runner.app Payload/
+        working-directory: build/ios/iphoneos
+      
+      # Create the IPA
+      - name: Create IPA
+        run: zip -r app.ipa Payload
+        working-directory: build/ios/iphoneos
+      
+      # Upload as artifact - Using v4 instead of v3
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-app
+          path: build/ios/iphoneos/app.ipa
+      
+      # Add to release
+      - name: Upload to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: build/ios/iphoneos/app.ipa
+          tag: v1.0
+          overwrite: true
+          body: "Development build (requires manual signing)"
