@@ -26,18 +26,20 @@ import fl_pip
         GeneratedPluginRegistrant.register(with: self)
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
-     override func registerPlugin(_ registry: FlutterPluginRegistry) {
-        GeneratedPluginRegistrant.register(with: registry)
+    // MARK: - Application Lifecycle
+   
+    
+    override func applicationWillEnterForeground(_ application: UIApplication) {
+        handleForegroundTransition()
     }
+    
     
     // MARK: - Application Lifecycle
     override func applicationDidEnterBackground(_ application: UIApplication) {
         handleBackgroundTransition()
     }
     
-    override func applicationWillEnterForeground(_ application: UIApplication) {
-        handleForegroundTransition()
-    }
+    
     
     override func applicationWillTerminate(_ application: UIApplication) {
         handleAppTermination()
