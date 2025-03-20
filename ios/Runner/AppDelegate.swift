@@ -42,7 +42,7 @@ import fl_pip
     
     
     override func applicationWillTerminate(_ application: UIApplication) {
-        handleAppTermination()
+        cleanupPiPResources()
     }
     
     // MARK: - PIP Functionality
@@ -63,6 +63,20 @@ import fl_pip
         setupPictureInPicture()
         
         pipPlayer?.play()
+         // Start PiP immediately if supported
+    guard let pipController = pipController else {
+        result(FlutterError(code: "PIP_ERROR", message: "PiP not supported", details: nil))
+        cleanupPiPResources()
+        return
+    }
+    
+    if pipController.isPictureInPicturePossible {
+        pipController.startPictureInPicture()
+    } else {
+        result(FlutterError(code: "PIP_ERROR", message: "PiP not possible", details: nil))
+        cleanupPiPResources()
+        return
+    }
         result(nil)
     }
     
@@ -297,24 +311,19 @@ import fl_pip
 extension AppDelegate: AVPictureInPictureControllerDelegate {
     func pictureInPictureControllerDidStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         pipChannel?.invokeMethod("onPiPStarted", arguments: nil)
+         playerViewController?.view.isHidden = true
     }
     
     func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
         pipChannel?.invokeMethod("onPiPStopped", arguments: nil)
-        if UIApplication.shared.applicationState == .active {
-            if let rootVC = window?.rootViewController {
-                let screenBounds = UIScreen.main.bounds
-                let pipWidth = screenBounds.width * 0.3
-                let pipHeight = pipWidth * 9/16
-                
-                playerViewController?.view.frame = CGRect(
-                    x: screenBounds.width - pipWidth - 16,
-                    y: screenBounds.height - pipHeight - 16,
-                    width: pipWidth,
-                    height: pipHeight
-                )
-            }
-        }
+        if UIApplication.shared.applicationState != .active {
+        // App is in background, clean up resources
+        cleanupPiPResources()
+    } else {
+        // App is active, show player in full screen
+        playerViewController?.view.isHidden = false
+        playerViewController?.view.frame = UIScreen.main.bounds
+    }
         cleanupPiPResources()
     }
     
@@ -325,9 +334,9 @@ extension AppDelegate: AVPictureInPictureControllerDelegate {
     
     func pictureInPictureController(_ pictureInPictureController: AVPictureInPictureController, restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void) {
         pipChannel?.invokeMethod("onRestoreFullScreen", arguments: nil)
-        if let rootVC = window?.rootViewController {
-            playerViewController?.view.frame = UIScreen.main.bounds
-        }
+        // Show the player in full screen
+    playerViewController?.view.isHidden = false
+    playerViewController?.view.frame = UIScreen.main.bounds
         completionHandler(true)
     }
 }

@@ -685,37 +685,54 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
 Offset _pipPosition = Offset(20, 20);
 double _pipSize = 200;
 void _togglePip() async {
-   
-    if (Platform.isIOS) {
-      if (_isInPipMode) {
-        await _pipChannel.invokeMethod('stopPip');
-      } else {
-        final position = _controller.value.position;
-        await _pipChannel.invokeMethod('startPip', {
-          'path': widget.filePath,
-          'position': position.inMilliseconds.toDouble(),
-        });
-      }
-    }else{
-      
-      if (_isInPipMode) {
-      await _exitPipMode();
+  if (Platform.isIOS) {
+    // Handle native iOS PiP using AVKit
+    if (_isInPipMode) {
+      await _pipChannel.invokeMethod('stopPip');
+      setState(() => _isInPipMode = false);
     } else {
+      final position = _controller.value.position;
+      await _pipChannel.invokeMethod('startPip', {
+        'path': widget.filePath,
+        'position': position.inMilliseconds.toDouble(),
+      });
+      setState(() => _isInPipMode = true);
+    }
+  } else {
+    // Android: Custom PiP overlay
+    setState(() {
+      _showPip = !_showPip;
+      if (_showPip) {
+        // Save current state when entering PiP
+        _isPlaying = _controller.value.isPlaying;
+        _controller.pause();
+        // Set initial PiP position
+        _pipPosition = Offset(
+          MediaQuery.of(context).size.width - _pipSize - 20,
+          MediaQuery.of(context).size.height - (_pipSize * 9/16) - 20,
+        );
+      } else {
+        // Restore playback state when closing PiP
+        if (_isPlaying) _controller.play();
+      }
+    });
+    
+    // For Android native PiP (optional - remove if using custom overlay only)
+    if (!_showPip && _isInPipMode) {
+      await _exitPipMode();
+    } else if (_showPip && !_isInPipMode) {
       await _enterPipMode();
     }
-    }
-  
-    
   }
+}
+
 Widget _buildPipOverlay() {
   return Positioned(
     left: _pipPosition.dx,
     top: _pipPosition.dy,
     child: GestureDetector(
       onPanUpdate: (details) {
-        setState(() {
-          _pipPosition += details.delta;
-        });
+        setState(() => _pipPosition += details.delta);
       },
       child: Container(
         width: _pipSize,
@@ -723,13 +740,6 @@ Widget _buildPipOverlay() {
         decoration: BoxDecoration(
           color: Colors.black,
           borderRadius: BorderRadius.circular(8),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black54,
-              blurRadius: 8,
-              spreadRadius: 2,
-            )
-          ],
         ),
         child: Stack(
           children: [
@@ -737,48 +747,47 @@ Widget _buildPipOverlay() {
               borderRadius: BorderRadius.circular(8),
               child: VideoPlayer(_controller),
             ),
-            Positioned(
-              top: 8,
-              right: 8,
-              child: Row(
-                children: [
-                  IconButton(
-          icon: Icon(Icons.fullscreen, color: Colors.white, size: 20),
-        onPressed: () async { // Add async
-          if (Platform.isIOS) {
-            await _pipChannel.invokeMethod('stopPip');
-            if (mounted) {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => VideoPlayerScreen(filePath: widget.filePath),
+            // Play/Pause Control
+            Positioned.fill(
+              child: IconButton(
+                icon: Icon(
+                  _isPlaying ? Icons.pause : Icons.play_arrow,
+                  color: Colors.white,
                 ),
-              );
-            }
-          } else {
-            if (mounted) {
-              setState(() {
-                _showPip = false;
-                _controller.play();
-              });
-            }
-          }
-        },
-      ),
-                  IconButton(
-                    icon: Icon(Icons.close, color: Colors.white, size: 20),
-                    onPressed: () async{
-                       if (Platform.isIOS) {
-                          await _pipChannel.invokeMethod('stopPip');
-                        } else {
-                          setState(() {
-                            _showPip = false;
-                            _controller.pause();
-                          });
-                        }
-                    },
-                  ),
-                ],
+                onPressed: _togglePlayPause,
+              ),
+            ),
+            // Control Bar
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                color: Colors.black54,
+                padding: EdgeInsets.symmetric(horizontal: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.fullscreen, color: Colors.white),
+                      onPressed: () {
+                        setState(() {
+                          _showPip = false;
+                          _controller.play();
+                        });
+                      },
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.close, color: Colors.white),
+                      onPressed: () {
+                        setState(() {
+                          _showPip = false;
+                          _controller.pause();
+                        });
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
@@ -1448,7 +1457,8 @@ Widget build(BuildContext context) {
                       ),
                     ),
             ),
-
+          // PiP Overlay (shown when active)
+          if (_showPip) _buildPipOverlay(),
           if (_showControls && !_isInPipMode) _buildControls(),
           if (_showVolumeOverlay) _buildVolumeOverlay(),
           if (_showBrightnessOverlay) _buildBrightnessOverlay(),
