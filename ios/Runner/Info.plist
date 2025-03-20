@@ -51,6 +51,8 @@
   <!-- Photo Library Access -->
   <key>NSPhotoLibraryUsageDescription</key>
   <string>This app needs access to your photo library to save files</string>
+  <key>AVKitPictureInPictureSupported</key>
+<true/>
   <key>NSAppTransportSecurity</key>
   <dict>
     <key>NSAllowsArbitraryLoads</key>
@@ -58,6 +60,10 @@
   </dict>
   <key>UIViewControllerBasedStatusBarAppearance</key>
 <false/>
+<key>NSCameraUsageDescription</key>
+<string>Required for video playback</string>
+<key>NSMicrophoneUsageDescription</key>
+<string>Required for audio playback</string>
 
 
   <!-- Biometric Authentication -->

@@ -24,6 +24,9 @@ import 'package:crypto/crypto.dart';
 import 'package:floating/floating.dart' as Float;
 // For iOS  
 import 'package:fl_pip/fl_pip.dart' as flpip;
+import 'package:pip_view/pip_view.dart';
+import 'package:audio_session/audio_session.dart';
+
 
 import 'dart:convert';
 
@@ -680,29 +683,26 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
   late final VolumeController _volumeController;
   late final StreamSubscription<double>? _volumeSubscription;
   GlobalKey _betterPlayerKey = GlobalKey();
-   final MethodChannel _pipChannel = const MethodChannel('pip_channel');
+  static const _pipChannel = MethodChannel('pip_channel');
   bool _showPip = false;
 Offset _pipPosition = Offset(20, 20);
 double _pipSize = 200;
 void _togglePip() async {
   if (Platform.isIOS) {
-    // Use custom PiP overlay for iOS
-    setState(() {
-      _showPip = !_showPip;
-      if (_showPip) {
-        // Save current playback state
-        _isPlaying = _controller.value.isPlaying;
+    final position = _controller.value.position.inMilliseconds.toDouble();
+    try {
+      final result = await _pipChannel.invokeMethod('startPip', {
+        'path': widget.filePath,
+        'position': position,
+      });
+      
+      if (result == true) {
+        setState(() => _isInPipMode = true);
         _controller.pause();
-        // Set initial PiP position
-        _pipPosition = Offset(
-          MediaQuery.of(context).size.width - _pipSize - 20,
-          MediaQuery.of(context).size.height - (_pipSize * 9 / 16) - 20,
-        );
-      } else {
-        // Restore playback when closing PiP
-        if (_isPlaying) _controller.play();
       }
-    });
+    } on PlatformException catch (e) {
+      print("PiP Error: ${e.message}");
+    }
   } else {
     // Android: Existing native PiP logic
     if (_isInPipMode) {
@@ -711,6 +711,24 @@ void _togglePip() async {
       await _enterPipMode();
     }
   }
+}
+void _initAudioSession() async {
+  final session = await AudioSession.instance;
+  await session.configure(AudioSessionConfiguration(
+    avAudioSessionCategory: AVAudioSessionCategory.playback,
+    avAudioSessionCategoryOptions: AVAudioSessionCategoryOptions.allowBluetooth |
+        AVAudioSessionCategoryOptions.allowBluetoothA2DP,
+    avAudioSessionMode: AVAudioSessionMode.defaultMode,
+    avAudioSessionRouteSharingPolicy: AVAudioSessionRouteSharingPolicy.defaultPolicy,
+    avAudioSessionSetActiveOptions: AVAudioSessionSetActiveOptions.none,
+    androidAudioAttributes: const AndroidAudioAttributes(
+      contentType: AndroidAudioContentType.music,
+      flags: AndroidAudioFlags.none,
+      usage: AndroidAudioUsage.media,
+    ),
+    androidAudioFocusGainType: AndroidAudioFocusGainType.gain,
+    androidWillPauseWhenDucked: true,
+  ));
 }
 
 Widget _buildPipOverlay() {
@@ -1229,6 +1247,9 @@ void _toggleFullScreen() {
         _enterPipMode();
 
       }
+       if (Platform.isIOS && _isPlaying) {
+      _togglePip(); // Automatically enter PiP when app backgrounds
+    }
     } else if (state == AppLifecycleState.resumed && _isInPipMode) {
       // User returned to the app while in PiP, exit PiP
       _exitPipMode();

@@ -80,6 +80,7 @@ dependencies:
   flutter_in_app_pip: ^1.7.4
   fl_pip: ^3.2.1
   pip_view: ^0.9.7
+  audio_session: ^0.1.25
 
 
 dev_dependencies:
