@@ -1615,7 +1615,7 @@ Widget build(BuildContext context) {
   return PIPView(
        floatingWidth: 500,
       floatingHeight: 300,
-    builder: (context, isFloating)=>{
+    builder: (context, isFloating){
             return Scaffold(
               backgroundColor: Colors.black,
               body: Stack(
@@ -1703,12 +1703,7 @@ Widget _buildFullScreenControls() {
     );
   }
 
-  void _togglePlayPause() {
-    setState(() {
-      _isPlaying ? _controller.pause() : _controller.play();
-      _isPlaying = !_isPlaying;
-    });
-  }
+
 
 }
 
