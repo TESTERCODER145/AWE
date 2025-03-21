@@ -6,6 +6,11 @@ import AVFoundation
     private var pipController: AVPictureInPictureController?
     private var player: AVPlayer?
     private var eventSink: FlutterEventSink?
+
+    // Add explicit public initializer
+    @objc public override init() {
+        super.init()
+    }
     
     public static func register(with registrar: FlutterPluginRegistrar) {
         let methodChannel = FlutterMethodChannel(name: "pip_channel", 
