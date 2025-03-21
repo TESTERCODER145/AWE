@@ -1659,8 +1659,10 @@ Widget build(BuildContext context) {
                         ),
                       )
               ),
-            if (!isFloating) _buildFullScreenControls(),
-            if (isFloating) _buildControls(),
+           
+            
+            if (!isFloating) _buildControls(),
+            if (isFloating) _buildFullScreenControls(),
             if (_showVolumeOverlay) _buildVolumeOverlay(),
             if (_showBrightnessOverlay) _buildBrightnessOverlay(),
           ],
