@@ -223,7 +223,7 @@ import fl_pip
     }
     
     private func setupPictureInPicture() {
-        guard let playerLayer = playerViewController?.playerView?.layer as? AVPlayerLayer else { return }
+        guard let playerLayer = playerViewController?.view?.layer as? AVPlayerLayer else { return }
         
         pipController = AVPictureInPictureController(playerLayer: playerLayer)
         pipController?.delegate = self
