@@ -720,15 +720,11 @@ void _togglePip() async {
       if (pip != null) {
         // Replace isInPiP and exit() with methods that are actually available
         // Check if we're in floating mode instead of isInPiP
-        if (pip.isFloating) {
-          pip.stopFloating(); // Use stopFloating() instead of exit()
-        } else {
-          pip.presentBelow(
-            Scaffold(
-              body: Container(color: Colors.black), // Your background content
-            )
-          );
-        }
+        pip.presentBelow(
+          Scaffold(
+            body: Container(color: Colors.black), // Background content
+          )
+        );
       }
       //  // Enable PiP with iOS configuration
       // await flpip.FlPiP().enable(
@@ -935,7 +931,8 @@ Widget _buildPipControls() {
                   // Fix: Use null safety and proper method
                   final pip = PIPView.of(context);
                   if (pip != null) {
-                    pip.stopFloating(); // Use stopFloating() instead of presentBelow(Container())
+                    // Call dismissFloating instead of methods that don't exist
+                    pip.dismissFloating();
                   }
                 },
               ),
