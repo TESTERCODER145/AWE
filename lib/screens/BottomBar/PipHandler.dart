@@ -48,7 +48,7 @@ class PipHandler {
   /// Stream of PiP state changes
   static Stream<bool> get pipState {
     _pipStateStream ??= _eventChannel
-        .receiveBroadcast()
+        .receiveBroadcastStream()
         .map((event) => event == 'started');
     return _pipStateStream!;
   }
