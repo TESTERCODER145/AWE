@@ -717,7 +717,7 @@ void _togglePip() async {
         return;
       }
       final pip = PIPView.of(context);
-      pip.isFloating ? pip.exitPiP() : pip.enterPiP();
+       pip.toggle();
       //  // Enable PiP with iOS configuration
       // await flpip.FlPiP().enable(
       //   ios: flpip.FlPiPiOSConfig(
@@ -919,7 +919,7 @@ Widget _buildPipControls() {
             children: [
               IconButton(
                 icon: Icon(Icons.close, color: Colors.white, size: 28),
-                onPressed: _closePip,
+                onPressed: () => PIPView.of(context).presentBelow(Container()),
               ),
             ],
           ),
@@ -1612,7 +1612,7 @@ Widget build(BuildContext context) {
     );
   }
 
-  return PIPView(
+  return PIPView (
        floatingWidth: 500,
       floatingHeight: 300,
     builder: (context, isFloating){
@@ -1636,7 +1636,7 @@ Widget build(BuildContext context) {
                                   child:  VideoPlayer(_controller),
                                 ),
                               ),
-                            )
+                          ),
                           : Center(
                               child: AspectRatio(
                                 aspectRatio:  _controller.value.aspectRatio,
@@ -1653,7 +1653,7 @@ Widget build(BuildContext context) {
                   if (_showBrightnessOverlay) _buildBrightnessOverlay(),
                 ],
               ),
-            ),
+            );
     }
   );
 }
