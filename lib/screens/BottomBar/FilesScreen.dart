@@ -932,7 +932,7 @@ Widget _buildPipControls() {
                   final pip = PIPView.of(context);
                   if (pip != null) {
                     // Call dismissFloating instead of methods that don't exist
-                    pip.dismissFloating();
+                    pip.stopFloating();
                   }
                 },
               ),
