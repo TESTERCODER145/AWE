@@ -717,15 +717,19 @@ void _togglePip() async {
         return;
       }
       final pip = PIPView.of(context);
-    if (pip?.isInPiP ?? false) {
-      pip?.exit();
-    } else {
-      pip?.presentBelow(
-        Scaffold(
-          body: Container(color: Colors.black), // Your background content
-        )
-      );
-    }
+      if (pip != null) {
+        // Replace isInPiP and exit() with methods that are actually available
+        // Check if we're in floating mode instead of isInPiP
+        if (pip.isFloating) {
+          pip.stopFloating(); // Use stopFloating() instead of exit()
+        } else {
+          pip.presentBelow(
+            Scaffold(
+              body: Container(color: Colors.black), // Your background content
+            )
+          );
+        }
+      }
       //  // Enable PiP with iOS configuration
       // await flpip.FlPiP().enable(
       //   ios: flpip.FlPiPiOSConfig(
@@ -927,7 +931,13 @@ Widget _buildPipControls() {
             children: [
               IconButton(
                 icon: Icon(Icons.close, color: Colors.white, size: 28),
-                onPressed: () => PIPView.of(context).presentBelow(Container()),
+                onPressed: () {
+                  // Fix: Use null safety and proper method
+                  final pip = PIPView.of(context);
+                  if (pip != null) {
+                    pip.stopFloating(); // Use stopFloating() instead of presentBelow(Container())
+                  }
+                },
               ),
             ],
           ),
@@ -1620,48 +1630,45 @@ Widget build(BuildContext context) {
     );
   }
 
-  return PIPView (
-       floatingWidth: 500,
-      floatingHeight: 300,
-    builder: (context, isFloating){
-            return Scaffold(
-              backgroundColor: Colors.black,
-              body: Stack(
-                children: [
-                  if (!_globalPipActive)
-                    GestureDetector(
-                      onTap: _toggleControls,
-                      onVerticalDragStart: _handleVerticalDragStart,
-                      onVerticalDragUpdate: _handleVerticalDragUpdate,
-                      onVerticalDragEnd: _handleVerticalDragEnd,
-                      child: _isFullScreen
-                          ? SizedBox.expand(
-                              child: FittedBox(
-                                fit: BoxFit.contain,
-                                child: SizedBox(
-                                  width:  _controller.value.size.width,
-                                  height:  _controller.value.size.height,
-                                  child:  VideoPlayer(_controller),
-                                ),
-                              ),
-                          )
-                          : Center(
-                              child: AspectRatio(
-                                aspectRatio:  _controller.value.aspectRatio,
-                                child: VideoPlayer(_controller),
-                              ),
-                            )
-                    ),
-                  // PiP Overlay (shown when active)
-                  // if(_globalPipActive) _buildGlobalPipOverlay(),
-                  // if (_showPip) _buildPipOverlay(),
-                  if (!isFloating) _buildFullScreenControls(),
-                  if (isFloating) _buildControls(),
-                  if (_showVolumeOverlay) _buildVolumeOverlay(),
-                  if (_showBrightnessOverlay) _buildBrightnessOverlay(),
-                ],
+  return PIPView(
+    floatingWidth: 500,
+    floatingHeight: 300,
+    builder: (context, isFloating) {
+      return Scaffold(
+        backgroundColor: Colors.black,
+        body: Stack(
+          children: [
+            if (!_globalPipActive)
+              GestureDetector(
+                onTap: _toggleControls,
+                onVerticalDragStart: _handleVerticalDragStart,
+                onVerticalDragUpdate: _handleVerticalDragUpdate,
+                onVerticalDragEnd: _handleVerticalDragEnd,
+                child: _isFullScreen
+                    ? SizedBox.expand(
+                        child: FittedBox(
+                          fit: BoxFit.contain,
+                          child: SizedBox(
+                            width: _controller.value.size.width,
+                            height: _controller.value.size.height,
+                            child: VideoPlayer(_controller),
+                          ),
+                        ),
+                    )
+                    : Center(
+                        child: AspectRatio(
+                          aspectRatio: _controller.value.aspectRatio,
+                          child: VideoPlayer(_controller),
+                        ),
+                      )
               ),
-            );
+            if (!isFloating) _buildFullScreenControls(),
+            if (isFloating) _buildControls(),
+            if (_showVolumeOverlay) _buildVolumeOverlay(),
+            if (_showBrightnessOverlay) _buildBrightnessOverlay(),
+          ],
+        ),
+      );
     }
   );
 }
