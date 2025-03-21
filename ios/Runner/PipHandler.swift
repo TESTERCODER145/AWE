@@ -2,7 +2,7 @@ import Flutter
 import AVKit
 import AVFoundation
 
-public class PipHandler: NSObject, FlutterPlugin, AVPictureInPictureControllerDelegate{
+@objc public class PipHandler: NSObject, FlutterPlugin, AVPictureInPictureControllerDelegate{
     private var pipController: AVPictureInPictureController?
     private var player: AVPlayer?
     private var eventSink: FlutterEventSink?

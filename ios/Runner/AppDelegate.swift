@@ -9,7 +9,7 @@ import UIKit
     ) -> Bool {
         let controller: FlutterViewController = window?.rootViewController as! FlutterViewController
          // Proper registration call
-        PipHandler.register(with: self.registrar(forPlugin: "PipHandlerPlugin")!)
+        PipHandler.register(with: self.registrar(forPlugin: "PipHandler")!)
         GeneratedPluginRegistrant.register(with: self)
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
