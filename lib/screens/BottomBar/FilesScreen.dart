@@ -696,18 +696,40 @@ void _togglePip() async {
   if (Platform.isIOS) {
     final position = _controller.value.position.inMilliseconds.toDouble();
     try {
-      final result = await _pipChannel.invokeMethod('startPip', {
-        'path': widget.filePath,
-        'position': position,
-      });
+      // final result = await _pipChannel.invokeMethod('startPip', {
+      //   'path': widget.filePath,
+      //   'position': position,
+      // });
       
-      if (result == true) {
-        setState((){
-            _globalPipActive = true;
-          _isInPipMode = true;
-        });
-        _controller.pause();
+      // if (result == true) {
+      //   setState((){
+      //       _globalPipActive = true;
+      //     _isInPipMode = true;
+      //   });
+      //   _controller.pause();
+      // }
+      // Check if PiP is supported
+      bool isAvailable = await flpip.FlPiP().isAvailable;
+      if (!isAvailable) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('PiP not supported on this device')),
+        );
+        return;
       }
+       // Enable PiP with iOS configuration
+      await flpip.FlPiP().enable(
+        ios: flpip.FlPiPiOSConfig(
+          videoPath: widget.filePath, // Path to your local video
+          packageName: null, // Use default bundle
+          createNewEngine: true,
+          enableControls: true, // Show playback controls in PiP
+          enablePlayback: true, // Allow background playback
+          enabledWhenBackground: true, // Keep PiP active when app is backgrounded
+        ),
+      );
+        // Move app to background to show PiP
+      await flpip.FlPiP().toggle(flpip.AppState.background);
+      setState(() => _globalPipActive = true);
     } on PlatformException catch (e) {
       print("PiP Error: ${e.message}");
     }
@@ -963,6 +985,7 @@ void _closePip() {
   } 
    _initializeVideoPlayer();
     _initVolumeListener();
+     _initAudioSession(); // Call this early
     
     // Make sure overlays are hidden at start
     _showVolumeOverlay = false;
@@ -1430,12 +1453,17 @@ void _toggleFullScreen() {
         _enterPipMode();
 
       }
-       if (Platform.isIOS && _isPlaying) {
+       if (Platform.isIOS &&  state == AppLifecycleState.paused && !_globalPipActive && _isPlaying) {
       _togglePip(); // Automatically enter PiP when app backgrounds
     }
     } else if (state == AppLifecycleState.resumed && _isInPipMode) {
       // User returned to the app while in PiP, exit PiP
       _exitPipMode();
+      if(Platform.isIOS && state == AppLifecycleState.resumed && _globalPipActive){
+         // Exit PiP when returning to app
+    flpip.FlPiP().disable();
+    setState(() => _globalPipActive = false);
+      }
     }
   }
 
