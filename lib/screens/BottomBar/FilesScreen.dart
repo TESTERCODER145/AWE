@@ -1680,29 +1680,6 @@ Widget _buildFullScreenControls() {
     );
   }
 
-  Widget _buildPipControls() {
-    return Positioned(
-      right: 8,
-      top: 8,
-      child: Row(
-        children: [
-          IconButton(
-            icon: Icon(Icons.fullscreen),
-            onPressed: _togglePip,
-            color: Colors.white,
-            iconSize: 20,
-          ),
-          IconButton(
-            icon: Icon(_isPlaying ? Icons.pause : Icons.play_arrow),
-            onPressed: _togglePlayPause,
-            color: Colors.white,
-            iconSize: 20,
-          ),
-        ],
-      ),
-    );
-  }
-
 
 
 }
