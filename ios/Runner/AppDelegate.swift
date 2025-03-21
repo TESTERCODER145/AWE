@@ -8,7 +8,10 @@ import UIKit
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
         let controller: FlutterViewController = window?.rootViewController as! FlutterViewController
-        PipHandler.register(with: controller.binaryMessenger)
+        // Manually register PipHandler
+        if let registrar = self.registrar(forPlugin: "PipHandlerPlugin") {
+            PipHandler.register(with: registrar)
+        }
         GeneratedPluginRegistrant.register(with: self)
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
