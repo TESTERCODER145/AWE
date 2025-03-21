@@ -98,6 +98,8 @@
 <array>
     <string>AVAudioSessionCategoryOptionMixWithOthers</string>
 </array>
+<key>UIApplicationSupportsPictureInPicture</key>
+<true/>
 
   <!-- Notifications -->
   <key>NSUserNotificationCenterUsageDescription</key>
