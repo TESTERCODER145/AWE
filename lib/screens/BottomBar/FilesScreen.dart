@@ -717,7 +717,15 @@ void _togglePip() async {
         return;
       }
       final pip = PIPView.of(context);
-       pip.toggle();
+    if (pip?.isInPiP ?? false) {
+      pip?.exit();
+    } else {
+      pip?.presentBelow(
+        Scaffold(
+          body: Container(color: Colors.black), // Your background content
+        )
+      );
+    }
       //  // Enable PiP with iOS configuration
       // await flpip.FlPiP().enable(
       //   ios: flpip.FlPiPiOSConfig(
@@ -1636,13 +1644,13 @@ Widget build(BuildContext context) {
                                   child:  VideoPlayer(_controller),
                                 ),
                               ),
-                          ),
+                          )
                           : Center(
                               child: AspectRatio(
                                 aspectRatio:  _controller.value.aspectRatio,
                                 child: VideoPlayer(_controller),
                               ),
-                            ),
+                            )
                     ),
                   // PiP Overlay (shown when active)
                   // if(_globalPipActive) _buildGlobalPipOverlay(),
