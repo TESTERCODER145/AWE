@@ -716,19 +716,22 @@ void _togglePip() async {
         );
         return;
       }
-       // Enable PiP with iOS configuration
-      await flpip.FlPiP().enable(
-        ios: flpip.FlPiPiOSConfig(
-          videoPath: widget.filePath, // Path to your local video
-          packageName: null, // Use default bundle
-          createNewEngine: true,
-          enableControls: true, // Show playback controls in PiP
-          enablePlayback: true, // Allow background playback
-          enabledWhenBackground: true, // Keep PiP active when app is backgrounded
-        ),
-      );
-        // Move app to background to show PiP
-      await flpip.FlPiP().toggle(flpip.AppState.background);
+      final pip = PIPView.of(context);
+      pip.isFloating ? pip.exitPiP() : pip.enterPiP();
+      //  // Enable PiP with iOS configuration
+      // await flpip.FlPiP().enable(
+      //   ios: flpip.FlPiPiOSConfig(
+      //     videoPath: widget.filePath, // Path to your local video
+      //     packageName: null, // Use default bundle
+      //     createNewEngine: true,
+      //     enableControls: true, // Show playback controls in PiP
+      //     enablePlayback: true, // Allow background playback
+      //     enabledWhenBackground: true, // Keep PiP active when app is backgrounded
+      //   ),
+      // );
+      //   // Move app to background to show PiP
+      // await flpip.FlPiP().toggle(flpip.AppState.background);
+      
       setState(() => _globalPipActive = true);
     } on PlatformException catch (e) {
       print("PiP Error: ${e.message}");
@@ -1609,53 +1612,103 @@ Widget build(BuildContext context) {
     );
   }
 
-  return WillPopScope(
-    onWillPop: () async {
-      if (_isFullScreen) {
-        _toggleFullScreen();
-        return false;
-      }
-      return true;
-    },
-    child: Scaffold(
-      backgroundColor: Colors.black,
-      body: Stack(
-        children: [
-          if (!_globalPipActive)
-            GestureDetector(
-              onTap: _toggleControls,
-              onVerticalDragStart: _handleVerticalDragStart,
-              onVerticalDragUpdate: _handleVerticalDragUpdate,
-              onVerticalDragEnd: _handleVerticalDragEnd,
-              child: _isFullScreen
-                  ? SizedBox.expand(
-                      child: FittedBox(
-                        fit: BoxFit.contain,
-                        child: SizedBox(
-                          width:  _controller.value.size.width,
-                          height:  _controller.value.size.height,
-                          child:  VideoPlayer(_controller),
-                        ),
-                      ),
-                    )
-                  : Center(
-                      child: AspectRatio(
-                        aspectRatio:  _controller.value.aspectRatio,
-                        child: VideoPlayer(_controller),
-                      ),
+  return PIPView(
+       floatingWidth: 500,
+      floatingHeight: 300,
+    builder: (context, isFloating)=>{
+            return Scaffold(
+              backgroundColor: Colors.black,
+              body: Stack(
+                children: [
+                  if (!_globalPipActive)
+                    GestureDetector(
+                      onTap: _toggleControls,
+                      onVerticalDragStart: _handleVerticalDragStart,
+                      onVerticalDragUpdate: _handleVerticalDragUpdate,
+                      onVerticalDragEnd: _handleVerticalDragEnd,
+                      child: _isFullScreen
+                          ? SizedBox.expand(
+                              child: FittedBox(
+                                fit: BoxFit.contain,
+                                child: SizedBox(
+                                  width:  _controller.value.size.width,
+                                  height:  _controller.value.size.height,
+                                  child:  VideoPlayer(_controller),
+                                ),
+                              ),
+                            )
+                          : Center(
+                              child: AspectRatio(
+                                aspectRatio:  _controller.value.aspectRatio,
+                                child: VideoPlayer(_controller),
+                              ),
+                            ),
                     ),
+                  // PiP Overlay (shown when active)
+                  // if(_globalPipActive) _buildGlobalPipOverlay(),
+                  // if (_showPip) _buildPipOverlay(),
+                  if (!isFloating) _buildFullScreenControls(),
+                  if (isFloating) _buildControls(),
+                  if (_showVolumeOverlay) _buildVolumeOverlay(),
+                  if (_showBrightnessOverlay) _buildBrightnessOverlay(),
+                ],
+              ),
             ),
-          // PiP Overlay (shown when active)
-          if(_globalPipActive) _buildGlobalPipOverlay(),
-          if (_showPip) _buildPipOverlay(),
-          if (_showControls && !_globalPipActive) _buildControls(),
-          if (_showVolumeOverlay) _buildVolumeOverlay(),
-          if (_showBrightnessOverlay) _buildBrightnessOverlay(),
-        ],
-      ),
-    ),
+    }
   );
 }
+Widget _buildFullScreenControls() {
+    return Positioned(
+      bottom: 0,
+      left: 0,
+      right: 0,
+      child: Container(
+        color: Colors.black54,
+        child: Row(
+          children: [
+            IconButton(
+              icon: Icon(_isPlaying ? Icons.pause : Icons.play_arrow),
+              onPressed: _togglePlayPause,
+            ),
+            IconButton(
+              icon: Icon(Icons.picture_in_picture),
+              onPressed: _togglePip,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPipControls() {
+    return Positioned(
+      right: 8,
+      top: 8,
+      child: Row(
+        children: [
+          IconButton(
+            icon: Icon(Icons.fullscreen),
+            onPressed: _togglePip,
+            color: Colors.white,
+            iconSize: 20,
+          ),
+          IconButton(
+            icon: Icon(_isPlaying ? Icons.pause : Icons.play_arrow),
+            onPressed: _togglePlayPause,
+            color: Colors.white,
+            iconSize: 20,
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _togglePlayPause() {
+    setState(() {
+      _isPlaying ? _controller.pause() : _controller.play();
+      _isPlaying = !_isPlaying;
+    });
+  }
 
 }
 
