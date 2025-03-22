@@ -696,51 +696,18 @@ void _togglePip() async {
   if (Platform.isIOS) {
     final position = _controller.value.position.inMilliseconds.toDouble();
     try {
-      // final result = await _pipChannel.invokeMethod('startPip', {
-      //   'path': widget.filePath,
-      //   'position': position,
-      // });
+      final result = await _pipChannel.invokeMethod('startPip', {
+        'path': widget.filePath,
+        'position': position,
+      });
       
-      // if (result == true) {
-      //   setState((){
-      //       _globalPipActive = true;
-      //     _isInPipMode = true;
-      //   });
-      //   _controller.pause();
-      // }
-      // Check if PiP is supported
-      bool isAvailable = await flpip.FlPiP().isAvailable;
-      if (!isAvailable) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('PiP not supported on this device')),
-        );
-        return;
+      if (result == true) {
+        setState((){
+            _globalPipActive = true;
+          _isInPipMode = true;
+        });
+        _controller.pause();
       }
-      final pip = PIPView.of(context);
-      if (pip != null) {
-        // Replace isInPiP and exit() with methods that are actually available
-        // Check if we're in floating mode instead of isInPiP
-        pip.presentBelow(
-          Scaffold(
-            body: Container(color: Colors.black), // Background content
-          )
-        );
-      }
-      //  // Enable PiP with iOS configuration
-      // await flpip.FlPiP().enable(
-      //   ios: flpip.FlPiPiOSConfig(
-      //     videoPath: widget.filePath, // Path to your local video
-      //     packageName: null, // Use default bundle
-      //     createNewEngine: true,
-      //     enableControls: true, // Show playback controls in PiP
-      //     enablePlayback: true, // Allow background playback
-      //     enabledWhenBackground: true, // Keep PiP active when app is backgrounded
-      //   ),
-      // );
-      //   // Move app to background to show PiP
-      // await flpip.FlPiP().toggle(flpip.AppState.background);
-      
-      setState(() => _globalPipActive = true);
     } on PlatformException catch (e) {
       print("PiP Error: ${e.message}");
     }
@@ -927,14 +894,7 @@ Widget _buildPipControls() {
             children: [
               IconButton(
                 icon: Icon(Icons.close, color: Colors.white, size: 28),
-                onPressed: () {
-                  // Fix: Use null safety and proper method
-                  final pip = PIPView.of(context);
-                  if (pip != null) {
-                    // Call dismissFloating instead of methods that don't exist
-                    pip.stopFloating();
-                  }
-                },
+                onPressed: _closePip,
               ),
             ],
           ),
@@ -1003,7 +963,6 @@ void _closePip() {
   } 
    _initializeVideoPlayer();
     _initVolumeListener();
-     _initAudioSession(); // Call this early
     
     // Make sure overlays are hidden at start
     _showVolumeOverlay = false;
@@ -1471,17 +1430,12 @@ void _toggleFullScreen() {
         _enterPipMode();
 
       }
-       if (Platform.isIOS &&  state == AppLifecycleState.paused && !_globalPipActive && _isPlaying) {
+       if (Platform.isIOS && _isPlaying) {
       _togglePip(); // Automatically enter PiP when app backgrounds
     }
     } else if (state == AppLifecycleState.resumed && _isInPipMode) {
       // User returned to the app while in PiP, exit PiP
       _exitPipMode();
-      if(Platform.isIOS && state == AppLifecycleState.resumed && _globalPipActive){
-         // Exit PiP when returning to app
-    flpip.FlPiP().disable();
-    setState(() => _globalPipActive = false);
-      }
     }
   }
 
@@ -1627,74 +1581,53 @@ Widget build(BuildContext context) {
     );
   }
 
-  return PIPView(
-    floatingWidth: 500,
-    floatingHeight: 300,
-    builder: (context, isFloating) {
-      return Scaffold(
-        backgroundColor: Colors.black,
-        body: Stack(
-          children: [
-            if (!_globalPipActive)
-              GestureDetector(
-                onTap: _toggleControls,
-                onVerticalDragStart: _handleVerticalDragStart,
-                onVerticalDragUpdate: _handleVerticalDragUpdate,
-                onVerticalDragEnd: _handleVerticalDragEnd,
-                child: _isFullScreen
-                    ? SizedBox.expand(
-                        child: FittedBox(
-                          fit: BoxFit.contain,
-                          child: SizedBox(
-                            width: _controller.value.size.width,
-                            height: _controller.value.size.height,
-                            child: VideoPlayer(_controller),
-                          ),
+  return WillPopScope(
+    onWillPop: () async {
+      if (_isFullScreen) {
+        _toggleFullScreen();
+        return false;
+      }
+      return true;
+    },
+    child: Scaffold(
+      backgroundColor: Colors.black,
+      body: Stack(
+        children: [
+          if (!_globalPipActive)
+            GestureDetector(
+              onTap: _toggleControls,
+              onVerticalDragStart: _handleVerticalDragStart,
+              onVerticalDragUpdate: _handleVerticalDragUpdate,
+              onVerticalDragEnd: _handleVerticalDragEnd,
+              child: _isFullScreen
+                  ? SizedBox.expand(
+                      child: FittedBox(
+                        fit: BoxFit.contain,
+                        child: SizedBox(
+                          width:  _controller.value.size.width,
+                          height:  _controller.value.size.height,
+                          child:  VideoPlayer(_controller),
                         ),
+                      ),
                     )
-                    : Center(
-                        child: AspectRatio(
-                          aspectRatio: _controller.value.aspectRatio,
-                          child: VideoPlayer(_controller),
-                        ),
-                      )
-              ),
-           
-            
-            if (!isFloating) _buildControls(),
-            if (isFloating) _buildFullScreenControls(),
-            if (_showVolumeOverlay) _buildVolumeOverlay(),
-            if (_showBrightnessOverlay) _buildBrightnessOverlay(),
-          ],
-        ),
-      );
-    }
+                  : Center(
+                      child: AspectRatio(
+                        aspectRatio:  _controller.value.aspectRatio,
+                        child: VideoPlayer(_controller),
+                      ),
+                    ),
+            ),
+          // PiP Overlay (shown when active)
+          if(_globalPipActive) _buildGlobalPipOverlay(),
+          if (_showPip) _buildPipOverlay(),
+          if (_showControls && !_globalPipActive) _buildControls(),
+          if (_showVolumeOverlay) _buildVolumeOverlay(),
+          if (_showBrightnessOverlay) _buildBrightnessOverlay(),
+        ],
+      ),
+    ),
   );
 }
-Widget _buildFullScreenControls() {
-    return Positioned(
-      bottom: 0,
-      left: 0,
-      right: 0,
-      child: Container(
-        color: Colors.black54,
-        child: Row(
-          children: [
-            IconButton(
-              icon: Icon(_isPlaying ? Icons.pause : Icons.play_arrow),
-              onPressed: _togglePlayPause,
-            ),
-            IconButton(
-              icon: Icon(Icons.picture_in_picture),
-              onPressed: _togglePip,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-
 
 }
 
