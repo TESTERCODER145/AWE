@@ -191,7 +191,13 @@ import fl_pip
         playerViewController = AVPlayerViewController()
         playerViewController?.player = pipPlayer
         playerViewController?.allowsPictureInPicturePlayback = true
-        playerViewController?.showsPlaybackControls = true
+        playerViewController?.showsPlaybackControls = false 
+
+         // Use full screen layout initially
+        playerViewController?.view.frame = UIScreen.main.bounds
+        window?.rootViewController?.view.addSubview(playerViewController!.view)
+        window?.rootViewController?.addChild(playerViewController!)
+        playerViewController?.didMove(toParent: window?.rootViewController)
         
         if let rootVC = window?.rootViewController {
             rootVC.addChild(playerViewController!)
@@ -223,10 +229,18 @@ import fl_pip
     }
     
     private func setupPictureInPicture() {
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+        guard let self = self,
+              let playerLayer = self.playerViewController?.view?.layer as? AVPlayerLayer,
+              AVPictureInPictureController.isPictureInPictureSupported() else {
+            print("PiP setup failed - layer not ready or unsupported")
+            return
+        }
         guard let playerLayer = playerViewController?.view?.layer as? AVPlayerLayer else { return }
         
-        pipController = AVPictureInPictureController(playerLayer: playerLayer)
-        pipController?.delegate = self
+        self.pipController = AVPictureInPictureController(playerLayer: playerLayer)
+        self.pipController?.delegate = self
         
         NotificationCenter.default.addObserver(
             self,
