@@ -188,124 +188,86 @@ import fl_pip
     
     // MARK: - PIP Helper Methods
     private func setupPlayerViewController() {
-        playerViewController = AVPlayerViewController()
-        playerViewController?.player = pipPlayer
-        playerViewController?.allowsPictureInPicturePlayback = true
-        playerViewController?.showsPlaybackControls = false 
+    playerViewController = AVPlayerViewController()
+    playerViewController?.player = pipPlayer
+    playerViewController?.allowsPictureInPicturePlayback = true
+    playerViewController?.showsPlaybackControls = false
 
-         // Use full screen layout initially
-        playerViewController?.view.frame = UIScreen.main.bounds
-        window?.rootViewController?.view.addSubview(playerViewController!.view)
-        window?.rootViewController?.addChild(playerViewController!)
-        playerViewController?.didMove(toParent: window?.rootViewController)
-        
-        if let rootVC = window?.rootViewController {
-            rootVC.addChild(playerViewController!)
-            rootVC.view.addSubview(playerViewController!.view)
-            
-            let screenBounds = UIScreen.main.bounds
-            let pipWidth = screenBounds.width * 0.3
-            let pipHeight = pipWidth * 9/16
-            
-            playerViewController!.view.frame = CGRect(
-                x: screenBounds.width - pipWidth - 16,
-                y: screenBounds.height - pipHeight - 16,
-                width: pipWidth,
-                height: pipHeight
-            )
-            
-            playerViewController!.view.layer.cornerRadius = 8
-            playerViewController!.view.layer.masksToBounds = true
-            
-            let containerView = UIView(frame: playerViewController!.view.frame)
-            rootVC.view.insertSubview(containerView, belowSubview: playerViewController!.view)
-            containerView.layer.shadowColor = UIColor.black.cgColor
-            containerView.layer.shadowOffset = CGSize(width: 0, height: 4)
-            containerView.layer.shadowOpacity = 0.3
-            containerView.layer.shadowRadius = 8
-            
-            playerViewController!.didMove(toParent: rootVC)
-        }
-    }
-    
+    // Use full screen layout initially
+    playerViewController?.view.frame = UIScreen.main.bounds
+    window?.rootViewController?.view.addSubview(playerViewController!.view)
+    window?.rootViewController?.addChild(playerViewController!)
+    playerViewController?.didMove(toParent: window?.rootViewController)
+}
     private func setupPictureInPicture() {
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
         guard let self = self,
               let playerLayer = self.playerViewController?.view?.layer as? AVPlayerLayer,
               AVPictureInPictureController.isPictureInPictureSupported() else {
             print("PiP setup failed - layer not ready or unsupported")
             return
         }
-        guard let playerLayer = playerViewController?.view?.layer as? AVPlayerLayer else { return }
         
         self.pipController = AVPictureInPictureController(playerLayer: playerLayer)
         self.pipController?.delegate = self
         
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(handleBackgroundTransition),
+            selector: #selector(self.handleBackgroundTransition),
             name: UIApplication.didEnterBackgroundNotification,
             object: nil
         )
         
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(handleForegroundTransition),
+            selector: #selector(self.handleForegroundTransition),
             name: UIApplication.willEnterForegroundNotification,
             object: nil
         )
-    }
+    } // Added missing closing brace for asyncAfter
+}
     
-    private func cleanupPiPResources() {
-        NotificationCenter.default.removeObserver(self, name: UIApplication.didEnterBackgroundNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIApplication.willEnterForegroundNotification, object: nil)
-        
-        pipPlayer?.pause()
-        pipPlayer = nil
-        
-        if pipController?.isPictureInPictureActive == true {
-            pipController?.stopPictureInPicture()
-        }
-        pipController = nil
-        
-        playerViewController?.willMove(toParent: nil)
-        playerViewController?.view.removeFromSuperview()
-        playerViewController?.removeFromParent()
-        playerViewController = nil
-    }
+   private func cleanupPiPResources() {
+    NotificationCenter.default.removeObserver(self, 
+        name: UIApplication.didEnterBackgroundNotification, 
+        object: nil
+    )
+    NotificationCenter.default.removeObserver(self, 
+        name: UIApplication.willEnterForegroundNotification, 
+        object: nil
+    )
     
+    pipPlayer?.pause()
+    pipPlayer = nil
+    
+    if pipController?.isPictureInPictureActive == true {
+        pipController?.stopPictureInPicture()
+    }
+    pipController = nil
+    
+    playerViewController?.willMove(toParent: nil)
+    playerViewController?.view.removeFromSuperview()
+    playerViewController?.removeFromParent()
+    playerViewController = nil
+}
     // MARK: - Lifecycle Handlers
     @objc private func handleBackgroundTransition() {
-        if pipPlayer != nil && pipController != nil && !pipController!.isPictureInPictureActive {
-            pipController?.startPictureInPicture()
-        }
-        
-        var backgroundTaskID: UIBackgroundTaskIdentifier = .invalid
-        backgroundTaskID = UIApplication.shared.beginBackgroundTask {
-            UIApplication.shared.endBackgroundTask(backgroundTaskID)
-            backgroundTaskID = .invalid
-        }
+    if pipPlayer != nil && pipController != nil && !pipController!.isPictureInPictureActive {
+        pipController?.startPictureInPicture()
     }
     
-    @objc private func handleForegroundTransition() {
-        if pipController?.isPictureInPictureActive == true {
-            pipController?.stopPictureInPicture()
-        }
-        
-        if let rootVC = window?.rootViewController {
-            let screenBounds = UIScreen.main.bounds
-            let pipWidth = screenBounds.width * 0.3
-            let pipHeight = pipWidth * 9/16
-            
-            playerViewController?.view.frame = CGRect(
-                x: screenBounds.width - pipWidth - 16,
-                y: screenBounds.height - pipHeight - 16,
-                width: pipWidth,
-                height: pipHeight
-            )
-        }
+    var backgroundTaskID: UIBackgroundTaskIdentifier = .invalid
+    backgroundTaskID = UIApplication.shared.beginBackgroundTask {
+        UIApplication.shared.endBackgroundTask(backgroundTaskID)
+        backgroundTaskID = .invalid
     }
+}
+    
+    @objc private func handleForegroundTransition() {
+    if pipController?.isPictureInPictureActive == true {
+        pipController?.stopPictureInPicture()
+    }
+}
     
     private func handleAppTermination() {
         if pipPlayer != nil && pipController != nil {
