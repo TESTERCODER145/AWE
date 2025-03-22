@@ -1469,7 +1469,7 @@ void _toggleFullScreen() {
       
      bool isSupported = await PiPService.isPiPSupported();
                 if (isSupported) {
-                  await PiPService.startPiP(videoFilePath, 0);
+                  await PiPService.startPiP(widget.filePath, 0);
                   setState(() => _globalPipActive = true);
                 } else {
                   print("PiP not supported on this device.");
