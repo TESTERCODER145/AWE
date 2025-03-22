@@ -1454,8 +1454,8 @@ void _toggleFullScreen() {
           setState(() => _globalPipActive = true);
         }
       } else if (Platform.isIOS) {
-        // iOS implementation using flutter_in_app_pip
-        // Create PiP widget with Android-style controls
+      // iOS implementation using flutter_in_app_pip
+      // Create PiP widget with Android-style controls
       //  try {
       // bool isPipSupported = await _pipChannel.invokeMethod('isPipSupported');
       // if (!isPipSupported) {
@@ -1524,9 +1524,8 @@ void _toggleFullScreen() {
 
   Future<void> _exitPipMode() async {
     if (_globalPipActive) {
-      try {
+      
         if (Platform.isIOS) {
-          // iOS implementation using flutter_in_app_pip
           try {
      await PiPService.stopPiP();
 
@@ -1534,6 +1533,7 @@ void _toggleFullScreen() {
       } catch (e) {
         print('Error exiting PiP mode: $e');
       }
+        }
     }
   }
   Widget _buildVideoPlayer() {
