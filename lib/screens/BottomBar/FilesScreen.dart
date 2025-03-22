@@ -946,7 +946,7 @@ void _closePip() {
   } 
    _initializeVideoPlayer();
     _initVolumeListener();
-    await PiPService.initialize();
+   
     
     // Make sure overlays are hidden at start
     _showVolumeOverlay = false;
@@ -954,24 +954,8 @@ void _closePip() {
   }
 
 
-void _initializePlayer() {
-  _pipChannel.setMethodCallHandler((call) async {
-      switch (call.method) {
-        case 'onPiPStarted':
-          setState(() => _isInPipMode = true);
-          break;
-        case 'onPiPStopped':
-          setState(() => _isInPipMode = false);
-          break;
-        case 'onPiPError':
-          print("PiP Error: ${call.arguments}");
-          break;
-        case 'onRestoreFullScreen':
-          // Handle restoration to full screen if needed
-          
-          break;
-      }
-    });
+void _initializePlayer() async{
+   await PiPService.initialize();
 
 }
 void _startControlsTimer() {
