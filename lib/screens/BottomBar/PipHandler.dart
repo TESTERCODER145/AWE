@@ -1,67 +1,35 @@
-import 'dart:async';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 
-class PipHandler {
-  static const _methodChannel = MethodChannel('pip_channel');
-  static const _eventChannel = EventChannel('pip_events');
-  static Stream<bool>? _pipStateStream;
+class PiPService {
+  static const MethodChannel _channel = MethodChannel('pip_channel');
 
-  /// Initialize PiP listener (call in main())
-  static void initialize() {
-    _methodChannel.setMethodCallHandler(_handleMethodCall);
+  /// Starts Picture-in-Picture mode with a given video file path and position
+  static Future<void> startPiP(String filePath, double position) async {
+    try {
+      await _channel.invokeMethod('startPip', {
+        'path': filePath,
+        'position': position,
+      });
+    } on PlatformException catch (e) {
+      print("Error starting PiP: ${e.message}");
+    }
   }
 
-  /// Check if PiP is supported on the device
-  static Future<bool> get isSupported async {
+  /// Stops Picture-in-Picture mode
+  static Future<void> stopPiP() async {
     try {
-      return await _methodChannel.invokeMethod('isPipSupported');
+      await _channel.invokeMethod('stopPip');
+    } on PlatformException catch (e) {
+      print("Error stopping PiP: ${e.message}");
+    }
+  }
+
+  /// Checks if Picture-in-Picture is supported on this device
+  static Future<bool> isPiPSupported() async {
+    try {
+      return await _channel.invokeMethod('isPipSupported');
     } on PlatformException {
       return false;
     }
-  }
-
-  /// Start PiP mode with current video
-  static Future<void> startPip({
-    required String videoPath,
-    required Duration position,
-  }) async {
-    try {
-      await _methodChannel.invokeMethod('startPip', {
-        'path': videoPath,
-        'position': position.inMilliseconds.toDouble(),
-      });
-    } on PlatformException catch (e) {
-      debugPrint("PiP Start Error: ${e.message}");
-    }
-  }
-
-  /// Stop PiP mode
-  static Future<void> stopPip() async {
-    try {
-      await _methodChannel.invokeMethod('stopPip');
-    } on PlatformException catch (e) {
-      debugPrint("PiP Stop Error: ${e.message}");
-    }
-  }
-
-  /// Stream of PiP state changes
-  static Stream<bool> get pipState {
-    _pipStateStream ??= _eventChannel
-        .receiveBroadcastStream()
-        .map((event) => event == 'started');
-    return _pipStateStream!;
-  }
-
-  static Future<dynamic> _handleMethodCall(MethodCall call) async {
-    switch (call.method) {
-      case 'onPiPStarted':
-        // Handle any additional logic on PiP start
-        break;
-      case 'onPiPStopped':
-        // Handle any additional logic on PiP stop
-        break;
-    }
-    return null;
   }
 }

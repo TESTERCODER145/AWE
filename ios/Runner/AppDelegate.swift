@@ -19,33 +19,27 @@ import fl_pip
         
         let controller = window?.rootViewController as! FlutterViewController
         
-        // Initialize both channels
         setupThumbnailChannel(controller: controller)
         setupPipChannel(controller: controller)
         
         GeneratedPluginRegistrant.register(with: self)
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
-    // MARK: - Application Lifecycle
-   
     
+    // MARK: - Application Lifecycle
     override func applicationWillEnterForeground(_ application: UIApplication) {
         handleForegroundTransition()
     }
     
-    
-    // MARK: - Application Lifecycle
     override func applicationDidEnterBackground(_ application: UIApplication) {
         handleBackgroundTransition()
     }
-    
-    
     
     override func applicationWillTerminate(_ application: UIApplication) {
         cleanupPiPResources()
     }
     
-    // MARK: - PIP Functionality
+    // MARK: - PiP Functionality
     private func handleStartPip(filePath: String, position: Double, result: @escaping FlutterResult) {
         cleanupPiPResources()
         
@@ -63,20 +57,14 @@ import fl_pip
         setupPictureInPicture()
         
         pipPlayer?.play()
-         // Start PiP immediately if supported
-    guard let pipController = pipController else {
-        result(FlutterError(code: "PIP_ERROR", message: "PiP not supported", details: nil))
-        cleanupPiPResources()
-        return
-    }
-    
-    if pipController.isPictureInPicturePossible {
+        
+        guard let pipController = pipController, pipController.isPictureInPicturePossible else {
+            result(FlutterError(code: "PIP_ERROR", message: "PiP not supported or possible", details: nil))
+            cleanupPiPResources()
+            return
+        }
+        
         pipController.startPictureInPicture()
-    } else {
-        result(FlutterError(code: "PIP_ERROR", message: "PiP not possible", details: nil))
-        cleanupPiPResources()
-        return
-    }
         result(nil)
     }
     
@@ -122,14 +110,7 @@ import fl_pip
     }
     
     private func configureAudioSessionForPlayback() {
-        do {
-            try AVAudioSession.sharedInstance().setCategory(.playback,
-                                                          mode: .moviePlayback,
-                                                          options: [.allowAirPlay, .allowBluetooth])
-            try AVAudioSession.sharedInstance().setActive(true)
-        } catch {
-            print("Playback audio session error: \(error)")
-        }
+        configureAudioSession()
     }
     
     private func setupThumbnailChannel(controller: FlutterViewController) {
@@ -168,157 +149,57 @@ import fl_pip
         pipChannel?.setMethodCallHandler { [weak self] (call, result) in
             switch call.method {
             case "startPip":
-               guard let args = call.arguments as? [String: Any],
-                  let path = args["path"] as? String,
-                  let position = args["position"] as? Double else {
-                result(FlutterError(code: "INVALID_ARGS", message: "Invalid arguments", details: nil))
-                return
-            }
-            self?.handleStartPip(filePath: path, position: position, result: result)
+                guard let args = call.arguments as? [String: Any],
+                      let path = args["path"] as? String,
+                      let position = args["position"] as? Double else {
+                    result(FlutterError(code: "INVALID_ARGS", message: "Invalid arguments", details: nil))
+                    return
+                }
+                self?.handleStartPip(filePath: path, position: position, result: result)
             case "stopPip":
                 self?.handleStopPip(result: result)
             case "isPipSupported":
-                 let isSupported = AVPictureInPictureController.isPictureInPictureSupported()
-                 result(isSupported)
+                result(AVPictureInPictureController.isPictureInPictureSupported())
             default:
                 result(FlutterMethodNotImplemented)
             }
         }
     }
     
-    // MARK: - PIP Helper Methods
+    // MARK: - PiP Helper Methods
     private func setupPlayerViewController() {
-    playerViewController = AVPlayerViewController()
-    playerViewController?.player = pipPlayer
-    playerViewController?.allowsPictureInPicturePlayback = true
-    playerViewController?.showsPlaybackControls = false
+        playerViewController = AVPlayerViewController()
+        playerViewController?.player = pipPlayer
+        playerViewController?.allowsPictureInPicturePlayback = true
+        playerViewController?.showsPlaybackControls = false
 
-    // Use full screen layout initially
-    playerViewController?.view.frame = UIScreen.main.bounds
-    window?.rootViewController?.view.addSubview(playerViewController!.view)
-    window?.rootViewController?.addChild(playerViewController!)
-    playerViewController?.didMove(toParent: window?.rootViewController)
-}
-    private func setupPictureInPicture() {
-    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
-        guard let self = self,
-              let playerLayer = self.playerViewController?.view?.layer as? AVPlayerLayer,
-              AVPictureInPictureController.isPictureInPictureSupported() else {
-            print("PiP setup failed - layer not ready or unsupported")
-            return
-        }
-        
-        self.pipController = AVPictureInPictureController(playerLayer: playerLayer)
-        self.pipController?.delegate = self
-        
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(self.handleBackgroundTransition),
-            name: UIApplication.didEnterBackgroundNotification,
-            object: nil
-        )
-        
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(self.handleForegroundTransition),
-            name: UIApplication.willEnterForegroundNotification,
-            object: nil
-        )
-    } // Added missing closing brace for asyncAfter
-}
-    
-   private func cleanupPiPResources() {
-    NotificationCenter.default.removeObserver(self, 
-        name: UIApplication.didEnterBackgroundNotification, 
-        object: nil
-    )
-    NotificationCenter.default.removeObserver(self, 
-        name: UIApplication.willEnterForegroundNotification, 
-        object: nil
-    )
-    
-    pipPlayer?.pause()
-    pipPlayer = nil
-    
-    if pipController?.isPictureInPictureActive == true {
-        pipController?.stopPictureInPicture()
+        playerViewController?.view.frame = UIScreen.main.bounds
+        window?.rootViewController?.view.addSubview(playerViewController!.view)
+        window?.rootViewController?.addChild(playerViewController!)
+        playerViewController?.didMove(toParent: window?.rootViewController)
     }
-    pipController = nil
     
-    playerViewController?.willMove(toParent: nil)
-    playerViewController?.view.removeFromSuperview()
-    playerViewController?.removeFromParent()
-    playerViewController = nil
-}
+    private func cleanupPiPResources() {
+        pipPlayer?.pause()
+        pipPlayer = nil
+        pipController = nil
+        
+        playerViewController?.willMove(toParent: nil)
+        playerViewController?.view.removeFromSuperview()
+        playerViewController?.removeFromParent()
+        playerViewController = nil
+    }
+    
     // MARK: - Lifecycle Handlers
     @objc private func handleBackgroundTransition() {
-    if pipPlayer != nil && pipController != nil && !pipController!.isPictureInPictureActive {
-        pipController?.startPictureInPicture()
-    }
-    
-    var backgroundTaskID: UIBackgroundTaskIdentifier = .invalid
-    backgroundTaskID = UIApplication.shared.beginBackgroundTask {
-        UIApplication.shared.endBackgroundTask(backgroundTaskID)
-        backgroundTaskID = .invalid
-    }
-}
-    
-    @objc private func handleForegroundTransition() {
-    if pipController?.isPictureInPictureActive == true {
-        pipController?.stopPictureInPicture()
-    }
-}
-    
-    private func handleAppTermination() {
-        if pipPlayer != nil && pipController != nil {
-            if !pipController!.isPictureInPictureActive {
-                pipController?.startPictureInPicture()
-            }
+        if pipPlayer != nil && pipController != nil && !pipController!.isPictureInPictureActive {
+            pipController?.startPictureInPicture()
         }
     }
     
-    // MARK: - Orientation
-    override func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
-        return .allButUpsideDown
-    }
-}
-
-// MARK: - PIP Controller Delegate
-extension AppDelegate: AVPictureInPictureControllerDelegate {
-    func pictureInPictureControllerDidStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
-        pipChannel?.invokeMethod("onPiPStarted", arguments: nil)
-         playerViewController?.view.isHidden = true
-    }
-    
-    func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
-        pipChannel?.invokeMethod("onPiPStopped", arguments: nil)
-        if UIApplication.shared.applicationState != .active {
-        // App is in background, clean up resources
-        cleanupPiPResources()
-    } else {
-        // App is active, show player in full screen
-        playerViewController?.view.isHidden = false
-        playerViewController?.view.frame = UIScreen.main.bounds
-    }
-        cleanupPiPResources()
-    }
-    
-    func pictureInPictureController(_ pictureInPictureController: AVPictureInPictureController, failedToStartPictureInPictureWithError error: Error) {
-        pipChannel?.invokeMethod("onPiPError", arguments: error.localizedDescription)
-        cleanupPiPResources()
-    }
-    
-    func pictureInPictureController(_ pictureInPictureController: AVPictureInPictureController, restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void) {
-        pipChannel?.invokeMethod("onRestoreFullScreen", arguments: nil)
-        // Show the player in full screen
-    playerViewController?.view.isHidden = false
-    playerViewController?.view.frame = UIScreen.main.bounds
-        completionHandler(true)
-    }
-}
-
-extension AVPlayerViewController {
-    var playerView: UIView? {
-        return self.view.subviews.first(where: { $0.layer is AVPlayerLayer })
+    @objc private func handleForegroundTransition() {
+        if pipController?.isPictureInPictureActive == true {
+            pipController?.stopPictureInPicture()
+        }
     }
 }

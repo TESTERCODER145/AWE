@@ -26,6 +26,7 @@ import 'package:floating/floating.dart' as Float;
 import 'package:fl_pip/fl_pip.dart' as flpip;
 import 'package:pip_view/pip_view.dart';
 import 'package:audio_session/audio_session.dart';
+import 'package:downloadsplatform/screens/BottomBar/PipHandler.dart';
 
 
 import 'dart:convert';
@@ -693,33 +694,15 @@ Offset _globalPipPosition = Offset(20, 20);
 double _globalPipSize = 300; // Increased from 200 to 300
 
 void _togglePip() async {
-  if (Platform.isIOS) {
-    final position = _controller.value.position.inMilliseconds.toDouble();
-    try {
-      final result = await _pipChannel.invokeMethod('startPip', {
-        'path': widget.filePath,
-        'position': position,
-      });
-      
-      if (result == true) {
-        setState((){
-            _globalPipActive = true;
-          _isInPipMode = true;
-        });
-        _controller.pause();
-      }
-    } on PlatformException catch (e) {
-      print("PiP Error: ${e.message}");
-    }
-  } else {
+ 
     // Android: Existing native PiP logic
-    if (_isInPipMode) {
+    if (_globalPipActive) {
       await _exitPipMode();
     } else {
       await _enterPipMode();
     }
     setState(() => _globalPipActive = !_globalPipActive);
-  }
+  
 }
 // Add these handler methods
 void _toggleFullScreenFromPip() {
@@ -1468,7 +1451,7 @@ void _toggleFullScreen() {
         ));
 
         if (status == Float.PiPStatus.enabled) {
-          setState(() => _isInPipMode = true);
+          setState(() => _globalPipActive = true);
         }
       } else if (Platform.isIOS) {
         // iOS implementation using flutter_in_app_pip
@@ -1484,11 +1467,13 @@ void _toggleFullScreen() {
       //   return;
       // }
       
-      final position = _controller.value.position.inMilliseconds;
-      await _pipChannel.invokeMethod('startPip', {
-        'path': widget.filePath,
-        'position': position.toDouble(),
-      });
+     bool isSupported = await PiPService.isPiPSupported();
+                if (isSupported) {
+                  await PiPService.startPiP(videoFilePath, 0);
+                  setState(() => _globalPipActive = true);
+                } else {
+                  print("PiP not supported on this device.");
+                }
       //  final isAvailable = await flpip.FlPiP().isAvailable;
       //   bool? isSupported = await _pipChannel.invokeMethod<bool>('isPipSupported');
       //     if (isSupported != true) {
@@ -1526,7 +1511,7 @@ void _toggleFullScreen() {
       //           );
       //         }
       
-      setState(() => _isInPipMode = true);
+      
     } 
 
        
@@ -1538,22 +1523,14 @@ void _toggleFullScreen() {
   }
 
   Future<void> _exitPipMode() async {
-    if (_isInPipMode) {
+    if (_globalPipActive) {
       try {
         if (Platform.isIOS) {
           // iOS implementation using flutter_in_app_pip
           try {
-      await _pipChannel.invokeMethod('stopPip');
-      setState(() => _isInPipMode = false);
-    } on PlatformException catch (e) {
-      print("PiP Error: ${e.message}");
-    }
-          
-        } else {
-          final floating = Float.Floating();
-          await floating.cancelOnLeavePiP();
-        }
-        setState(() => _isInPipMode = false);
+     await PiPService.stopPiP();
+
+        setState(() => _globalPipActive = false);
       } catch (e) {
         print('Error exiting PiP mode: $e');
       }
