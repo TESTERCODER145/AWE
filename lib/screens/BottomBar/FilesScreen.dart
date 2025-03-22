@@ -1887,15 +1887,15 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
   }
 }
 
-class PDFViewerScreen extends StatelessWidget {
-  final String filePath;
-  PDFViewerScreen({required this.filePath});
+    class PDFViewerScreen extends StatelessWidget {
+    final String filePath;
+    PDFViewerScreen({required this.filePath});
 
-  @override
-  Widget build(BuildContext context) {
+    @override
+    Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('عرض PDF')),
-      body: PDFView(filePath: filePath),
+    appBar: AppBar(title: Text('عرض PDF')), // Fixed line
+    body: PDFView(filePath: filePath),
     );
-  }
-}
+    }
+    }
