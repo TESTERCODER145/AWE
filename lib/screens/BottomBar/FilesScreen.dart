@@ -946,6 +946,7 @@ void _closePip() {
   } 
    _initializeVideoPlayer();
     _initVolumeListener();
+    await PiPService.initialize();
     
     // Make sure overlays are hidden at start
     _showVolumeOverlay = false;
@@ -1469,7 +1470,7 @@ void _toggleFullScreen() {
       
      bool isSupported = await PiPService.isPiPSupported();
                 if (isSupported) {
-                  await PiPService.startPiP(widget.filePath, 0);
+                  await PiPService.startPiP(widget.filePath);
                   setState(() => _globalPipActive = true);
                 } else {
                   print("PiP not supported on this device.");
